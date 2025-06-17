@@ -1,0 +1,393 @@
+// Advanced animations and transitions
+
+// Page transition
+.page-transition {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease-out;
+  
+  &.loaded {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Stagger animations for lists
+.stagger-animation {
+  .animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    
+    @for $i from 1 through 10 {
+      &:nth-child(#{$i}) {
+        transition-delay: #{$i * 0.1}s;
+      }
+    }
+    
+    &.animated {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+// Hover effects for interactive elements
+.hover-lift {
+  transition: $transition-base;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: $shadow-xl;
+  }
+}
+
+.hover-scale {
+  transition: $transition-base;
+  
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.hover-rotate {
+  transition: $transition-base;
+  
+  &:hover {
+    transform: rotate(5deg);
+  }
+}
+
+// Loading animations
+.skeleton {
+  background: linear-gradient(90deg, $light-color 25%, rgba($light-color, 0.5) 50%, $light-color 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@include keyframes(loading) {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+// Parallax effect
+.parallax {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+// Smooth reveal animations
+.reveal-up {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  
+  &.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-50px);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  
+  &.revealed {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(50px);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  
+  &.revealed {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// Text animations
+.text-reveal {
+  overflow: hidden;
+  
+  .text-reveal__line {
+    display: block;
+    transform: translateY(100%);
+    transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  
+  &.revealed .text-reveal__line {
+    transform: translateY(0);
+  }
+}
+
+// Button animations
+.btn-pulse {
+  animation: pulse 2s infinite;
+}
+
+.btn-bounce {
+  animation: bounce 1s infinite;
+}
+
+@include keyframes(bounce) {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  40%, 43% {
+    transform: translate3d(0, -30px, 0);
+  }
+  70% {
+    transform: translate3d(0, -15px, 0);
+  }
+  90% {
+    transform: translate3d(0, -4px, 0);
+  }
+}
+
+// Card flip animation
+.flip-card {
+  perspective: 1000px;
+  
+  &__inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+  }
+  
+  &:hover &__inner {
+    transform: rotateY(180deg);
+  }
+  
+  &__front,
+  &__back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: $border-radius-xl;
+  }
+  
+  &__back {
+    transform: rotateY(180deg);
+    background: $primary-gradient;
+    color: $white-color;
+    @include flex-center;
+    flex-direction: column;
+  }
+}
+
+// Progress bar animation
+.progress-bar {
+  width: 100%;
+  height: 4px;
+  background: rgba($primary-color, 0.2);
+  border-radius: 2px;
+  overflow: hidden;
+  
+  &__fill {
+    height: 100%;
+    background: $primary-gradient;
+    border-radius: 2px;
+    transform: translateX(-100%);
+    transition: transform 1s ease-out;
+    
+    &.animate {
+      transform: translateX(0);
+    }
+  }
+}
+
+// Typewriter effect
+.typewriter {
+  overflow: hidden;
+  border-right: 2px solid $primary-color;
+  white-space: nowrap;
+  margin: 0 auto;
+  animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+}
+
+@include keyframes(typing) {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@include keyframes(blink-caret) {
+  from, to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: $primary-color;
+  }
+}
+
+// Morphing shapes
+.morph-shape {
+  width: 100px;
+  height: 100px;
+  background: $primary-gradient;
+  border-radius: 50%;
+  transition: all 0.5s ease;
+  
+  &:hover {
+    border-radius: 20%;
+    transform: rotate(45deg);
+  }
+}
+
+// Glitch effect
+.glitch {
+  position: relative;
+  
+  &::before,
+  &::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  &::before {
+    animation: glitch-1 0.5s infinite;
+    color: #ff0000;
+    z-index: -1;
+  }
+  
+  &::after {
+    animation: glitch-2 0.5s infinite;
+    color: #00ff00;
+    z-index: -2;
+  }
+}
+
+@include keyframes(glitch-1) {
+  0%, 100% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+  }
+  40% {
+    transform: translate(-2px, -2px);
+  }
+  60% {
+    transform: translate(2px, 2px);
+  }
+  80% {
+    transform: translate(2px, -2px);
+  }
+}
+
+@include keyframes(glitch-2) {
+  0%, 100% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(2px, 2px);
+  }
+  40% {
+    transform: translate(2px, -2px);
+  }
+  60% {
+    transform: translate(-2px, 2px);
+  }
+  80% {
+    transform: translate(-2px, -2px);
+  }
+}
+
+// Reduce motion for accessibility
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+// Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// Animation classes
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.6s ease-out;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}

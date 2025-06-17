@@ -1,0 +1,1330 @@
+@use 'sass:map';
+@use 'sass:color';
+@use 'variables' as *;
+@use 'mixins' as *;
+
+// Reset and base styles
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: $font-family;
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+  color: $dark-color;
+  background-color: $white-color;
+  overflow-x: hidden;
+}
+
+// Container
+.container {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+  
+  @include media-breakpoint-up(sm) {
+    max-width: map.get($container-max-widths, sm);
+  }
+  
+  @include media-breakpoint-up(md) {
+    max-width: map.get($container-max-widths, md);
+  }
+  
+  @include media-breakpoint-up(lg) {
+    max-width: map.get($container-max-widths, lg);
+  }
+  
+  @include media-breakpoint-up(xl) {
+    max-width: map.get($container-max-widths, xl);
+  }
+  
+  @include media-breakpoint-up(xxl) {
+    max-width: map.get($container-max-widths, xxl);
+  }
+}
+
+// Typography
+h1, h2, h3, h4, h5, h6 {
+  font-weight: $font-weight-bold;
+  line-height: $line-height-sm;
+  margin-bottom: map.get($spacers, 3);
+}
+
+h1 {
+  font-size: $font-size-hero;
+  
+  @include media-breakpoint-down(md) {
+    font-size: $font-size-xxl;
+  }
+}
+
+h2 {
+  font-size: $font-size-xxl;
+  
+  @include media-breakpoint-down(md) {
+    font-size: $font-size-xl;
+  }
+}
+
+h3 {
+  font-size: $font-size-xl;
+}
+
+p {
+  margin-bottom: map.get($spacers, 3);
+}
+
+a {
+  color: $primary-color;
+  text-decoration: none;
+  transition: $transition-base;
+  
+  &:hover {
+    color: color.adjust($primary-color, $lightness: -10%);
+  }
+}
+
+// Buttons
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  border-radius: $border-radius;
+  cursor: pointer;
+  transition: $transition-base;
+  min-height: 48px;
+  
+  &--primary {
+    background: $primary-gradient;
+    color: $white-color;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: $shadow-lg;
+    }
+  }
+  
+  &--secondary {
+    background: transparent;
+    color: $primary-color;
+    border: 2px solid $primary-color;
+    
+    &:hover {
+      background: rgba($primary-color, 0.1);
+      transform: translateY(-2px);
+      box-shadow: $shadow-lg;
+    }
+  }
+  
+  &--full {
+    width: 100%;
+  }
+  
+  @include media-breakpoint-down(md) {
+    padding: 10px 20px;
+    font-size: $font-size-sm;
+  }
+}
+
+// Section titles
+.section-title {
+  text-align: center;
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-bold;
+  margin-bottom: map.get($spacers, 5);
+  
+  @include media-breakpoint-down(md) {
+    font-size: $font-size-xl;
+    margin-bottom: map.get($spacers, 4);
+  }
+}
+
+// Header
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba($white-color, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba($gray-color, 0.1);
+  z-index: $z-index-fixed;
+  transition: $transition-base;
+  
+  &__content {
+    @include flex-between;
+    padding: 15px 0;
+    
+    @include media-breakpoint-down(lg) {
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+  }
+  
+  &__contacts {
+    @include flex-center;
+    gap: 15px;
+    
+    @include media-breakpoint-down(md) {
+      order: 3;
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
+
+// Logo
+.logo {
+  @include flex-column;
+  
+  &__text {
+    font-size: 24px;
+    font-weight: $font-weight-bold;
+    color: $secondary-color;
+    line-height: 1;
+  }
+  
+  &__subtitle {
+    font-size: 12px;
+    color: $gray-color;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+}
+
+// Navigation
+.nav {
+  @include flex-center;
+  gap: 30px;
+  
+  @include media-breakpoint-down(lg) {
+    gap: 20px;
+  }
+  
+  @include media-breakpoint-down(md) {
+    order: 2;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  &__link {
+    font-weight: $font-weight-medium;
+    color: $dark-color;
+    transition: $transition-base;
+    
+    &:hover {
+      color: $primary-color;
+    }
+    
+    &--accent {
+      background: $primary-gradient;
+      color: $white-color;
+      padding: 8px 16px;
+      border-radius: $border-radius;
+      
+      &:hover {
+        color: $white-color;
+        transform: translateY(-2px);
+        box-shadow: $shadow;
+      }
+    }
+  }
+}
+
+// Phone and messengers
+.phone {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $secondary-color;
+  
+  &:hover {
+    color: $primary-color;
+  }
+}
+
+.messengers {
+  @include flex-center;
+  gap: 10px;
+}
+
+.messenger {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  @include flex-center;
+  transition: $transition-base;
+  
+  &--telegram {
+    background: #0088cc;
+    
+    &::before {
+      content: "✈️";
+      font-size: 18px;
+    }
+  }
+  
+  &--whatsapp {
+    background: #25d366;
+    
+    &::before {
+      content: "💬";
+      font-size: 18px;
+    }
+  }
+  
+  &:hover {
+    transform: scale(1.1);
+    box-shadow: $shadow;
+  }
+}
+
+// Hero section
+.hero {
+  position: relative;
+  min-height: 100vh;
+  background: $hero-gradient;
+  color: $white-color;
+  @include flex-center;
+  padding-top: 80px;
+  overflow: hidden;
+  
+  &__bg-animation {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.1;
+    background-image: 
+      radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  &__content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    width: 100%;
+    
+    @include media-breakpoint-down(lg) {
+      grid-template-columns: 1fr;
+      gap: 40px;
+      text-align: center;
+    }
+  }
+  
+  &__text {
+    animation: slideUp 0.8s ease-out 0.2s both;
+  }
+  
+  &__title {
+    font-size: $font-size-hero;
+    font-weight: $font-weight-bold;
+    line-height: 1.1;
+    margin-bottom: map.get($spacers, 4);
+    
+    @include media-breakpoint-down(lg) {
+      font-size: 40px;
+    }
+    
+    @include media-breakpoint-down(md) {
+      font-size: 32px;
+    }
+  }
+  
+  &__title-accent {
+    background: linear-gradient(45deg, $accent-color, #FFE066);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: block;
+  }
+  
+  &__subtitle {
+    font-size: $font-size-lg;
+    line-height: $line-height-lg;
+    margin-bottom: map.get($spacers, 5);
+    opacity: 0.9;
+    
+    @include media-breakpoint-down(md) {
+      font-size: $font-size-base;
+    }
+  }
+  
+  &__benefits {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: map.get($spacers, 5);
+    
+    @include media-breakpoint-down(md) {
+      justify-content: center;
+    }
+  }
+  
+  &__actions {
+    display: flex;
+    gap: 20px;
+    
+    @include media-breakpoint-down(md) {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+  
+  &__visual {
+    position: relative;
+    animation: slideUp 0.8s ease-out 0.4s both;
+    
+    @include media-breakpoint-down(lg) {
+      order: -1;
+    }
+  }
+  
+  &__image-container {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    border-radius: $border-radius-xl;
+    overflow: hidden;
+    box-shadow: $shadow-xl;
+  }
+  
+  &__image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    
+    &--1 {
+      background: linear-gradient(45deg, $primary-color, $secondary-color);
+      @include flex-center;
+      font-size: 24px;
+      
+      &::after {
+        content: "🚜 Экскаватор";
+      }
+    }
+    
+    &--2 {
+      background: linear-gradient(45deg, $accent-color, $primary-color);
+      @include flex-center;
+      font-size: 24px;
+      color: $white-color;
+      
+      &::after {
+        content: "🚛 Самосвал";
+      }
+    }
+    
+    &--3 {
+      background: linear-gradient(45deg, $secondary-color, $accent-color);
+      @include flex-center;
+      font-size: 24px;
+      color: $dark-color;
+      
+      &::after {
+        content: "🏗️ Кран";
+      }
+    }
+    
+    &.active {
+      opacity: 1;
+    }
+  }
+}
+
+// Benefits
+.benefit {
+  @include flex-center;
+  gap: 10px;
+  background: rgba($white-color, 0.1);
+  padding: 12px 20px;
+  border-radius: $border-radius-lg;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba($white-color, 0.2);
+  
+  &__icon {
+    font-size: 20px;
+  }
+  
+  &__text {
+    font-weight: $font-weight-medium;
+    white-space: nowrap;
+    
+    @include media-breakpoint-down(sm) {
+      font-size: $font-size-sm;
+    }
+  }
+}
+
+// Choice section
+.choice-section {
+  padding: map.get($spacers, 8) 0;
+  background: $light-color;
+  
+  &__title {
+    text-align: center;
+    font-size: $font-size-xxl;
+    margin-bottom: map.get($spacers, 3);
+    color: $secondary-color;
+  }
+  
+  &__subtitle {
+    text-align: center;
+    font-size: $font-size-lg;
+    color: $gray-color;
+    margin-bottom: map.get($spacers, 5);
+  }
+}
+
+.choice-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+}
+
+.choice-card {
+  background: $white-color;
+  padding: 40px 30px;
+  border-radius: $border-radius-xl;
+  text-align: center;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: $transition-base;
+  
+  &:hover {
+    border-color: $primary-color;
+    transform: translateY(-5px);
+    box-shadow: $shadow-xl;
+  }
+  
+  &__icon {
+    font-size: 48px;
+    margin-bottom: map.get($spacers, 3);
+    display: block;
+  }
+  
+  &__title {
+    font-size: $font-size-xl;
+    color: $secondary-color;
+    margin-bottom: map.get($spacers, 2);
+  }
+  
+  &__text {
+    color: $gray-color;
+    line-height: $line-height-lg;
+  }
+}
+
+// Services section (продолжение)
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+}
+
+.service-card {
+  background: linear-gradient(135deg, $white-color 0%, $light-color 100%);
+  padding: 40px 30px;
+  border-radius: $border-radius-xl;
+  text-align: center;
+  border: 1px solid rgba($gray-color, 0.1);
+  transition: $transition-base;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: $shadow-xl;
+  }
+  
+  &__icon {
+    font-size: 48px;
+    margin-bottom: map.get($spacers, 3);
+    display: block;
+  }
+  
+  &__title {
+    font-size: $font-size-xl;
+    color: $secondary-color;
+    margin-bottom: map.get($spacers, 2);
+  }
+  
+  &__text {
+    color: $gray-color;
+    font-weight: $font-weight-medium;
+  }
+}
+
+// Advantages section
+.advantages {
+  padding: map.get($spacers, 8) 0;
+  background: $secondary-color;
+  color: $white-color;
+}
+
+.advantages-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 40px;
+}
+
+.advantage-card {
+  position: relative;
+  padding: 40px 30px;
+  background: rgba($white-color, 0.05);
+  border-radius: $border-radius-xl;
+  border: 1px solid rgba($white-color, 0.1);
+  backdrop-filter: blur(10px);
+  
+  &__number {
+    position: absolute;
+    top: -15px;
+    left: 30px;
+    background: $primary-gradient;
+    color: $white-color;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    @include flex-center;
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    box-shadow: $shadow;
+  }
+  
+  &__title {
+    font-size: $font-size-xl;
+    margin-bottom: map.get($spacers, 3);
+    margin-top: map.get($spacers, 2);
+  }
+  
+  &__text {
+    color: rgba($white-color, 0.9);
+    line-height: $line-height-lg;
+  }
+}
+
+// Map section
+.map-section {
+  padding: map.get($spacers, 8) 0;
+  background: $light-color;
+}
+
+.map-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  
+  @include media-breakpoint-down(lg) {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+.map-info {
+  &__title {
+    font-size: $font-size-xxl;
+    color: $secondary-color;
+    margin-bottom: map.get($spacers, 3);
+  }
+  
+  &__text {
+    font-size: $font-size-lg;
+    color: $gray-color;
+    line-height: $line-height-lg;
+    margin-bottom: map.get($spacers, 4);
+  }
+}
+
+.map-stats {
+  display: flex;
+  gap: 30px;
+  
+  @include media-breakpoint-down(sm) {
+    flex-direction: column;
+    gap: 20px;
+  }
+}
+
+.map-stat {
+  text-align: center;
+  
+  &__number {
+    display: block;
+    font-size: $font-size-xxl;
+    font-weight: $font-weight-bold;
+    color: $primary-color;
+    line-height: 1;
+  }
+  
+  &__text {
+    font-size: $font-size-sm;
+    color: $gray-color;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+}
+
+.map-container {
+  position: relative;
+  height: 400px;
+  border-radius: $border-radius-xl;
+  overflow: hidden;
+  box-shadow: $shadow-lg;
+}
+
+.map {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, $secondary-color, $primary-color);
+  @include flex-center;
+  color: $white-color;
+  font-size: $font-size-xl;
+  
+  &::before {
+    content: "🗺️ Интерактивная карта";
+  }
+}
+
+// Contact section
+.contact-section {
+  padding: map.get($spacers, 8) 0;
+  background: $white-color;
+}
+
+.contact-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+  
+  @include media-breakpoint-down(lg) {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+.contact-info {
+  &__title {
+    font-size: $font-size-xxl;
+    color: $secondary-color;
+    margin-bottom: map.get($spacers, 3);
+  }
+  
+  &__text {
+    font-size: $font-size-lg;
+    color: $gray-color;
+    line-height: $line-height-lg;
+    margin-bottom: map.get($spacers, 4);
+  }
+}
+
+.contact-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.contact-method {
+  @include flex-center;
+  justify-content: flex-start;
+  gap: 15px;
+  padding: 20px;
+  background: $light-color;
+  border-radius: $border-radius-lg;
+  transition: $transition-base;
+  
+  &:hover {
+    background: $primary-color;
+    color: $white-color;
+    transform: translateX(10px);
+  }
+  
+  &__icon {
+    font-size: 24px;
+  }
+  
+  &__text {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-medium;
+  }
+}
+
+// Contact form
+.contact-form {
+  background: $light-color;
+  padding: 40px;
+  border-radius: $border-radius-xl;
+  
+  &__title {
+    font-size: $font-size-xl;
+    color: $secondary-color;
+    margin-bottom: map.get($spacers, 4);
+    text-align: center;
+  }
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid rgba($gray-color, 0.2);
+  border-radius: $border-radius;
+  font-size: $font-size-base;
+  font-family: $font-family;
+  margin-bottom: map.get($spacers, 3);
+  transition: $transition-base;
+  
+  &:focus {
+    outline: none;
+    border-color: $primary-color;
+    box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+  }
+}
+
+.form-textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.form-select {
+  cursor: pointer;
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23666" stroke-width="2"><polyline points="6,9 12,15 18,9"></polyline></svg>');
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 16px;
+  appearance: none;
+}
+
+// Footer
+.footer {
+  background: $dark-color;
+  color: $white-color;
+  padding: map.get($spacers, 6) 0 map.get($spacers, 4);
+  
+  &__content {
+    @include flex-between;
+    margin-bottom: map.get($spacers, 4);
+    
+    @include media-breakpoint-down(md) {
+      flex-direction: column;
+      gap: 30px;
+      text-align: center;
+    }
+  }
+  
+  &__main {
+    flex: 1;
+  }
+  
+  &__description {
+    color: rgba($white-color, 0.7);
+    margin-top: map.get($spacers, 3);
+    max-width: 400px;
+    line-height: $line-height-lg;
+  }
+  
+  &__contacts {
+    @include flex-column;
+    align-items: flex-end;
+    gap: 20px;
+    
+    @include media-breakpoint-down(md) {
+      align-items: center;
+    }
+  }
+  
+  &__phone {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-semibold;
+    color: $white-color;
+    
+    &:hover {
+      color: $primary-color;
+    }
+  }
+  
+  &__messengers {
+    @include flex-center;
+    gap: 15px;
+  }
+  
+  &__bottom {
+    @include flex-between;
+    padding-top: map.get($spacers, 4);
+    border-top: 1px solid rgba($white-color, 0.1);
+    
+    @include media-breakpoint-down(md) {
+      flex-direction: column;
+      gap: 20px;
+      text-align: center;
+    }
+  }
+  
+  &__copyright {
+    color: rgba($white-color, 0.6);
+    font-size: $font-size-sm;
+  }
+  
+  &__links {
+    @include flex-center;
+    gap: 30px;
+    
+    @include media-breakpoint-down(sm) {
+      flex-direction: column;
+      gap: 15px;
+    }
+  }
+  
+  &__link {
+    color: rgba($white-color, 0.7);
+    font-size: $font-size-sm;
+    transition: $transition-base;
+    
+    &:hover {
+      color: $primary-color;
+    }
+  }
+}
+
+// Modal
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba($dark-color, 0.8);
+  @include flex-center;
+  z-index: $z-index-modal;
+  opacity: 0;
+  visibility: hidden;
+  transition: $transition-base;
+  
+  &.show {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  &__content {
+    background: $white-color;
+    border-radius: $border-radius-xl;
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: scale(0.8);
+    transition: $transition-base;
+    
+    .modal.show & {
+      transform: scale(1);
+    }
+  }
+  
+  &__header {
+    @include flex-between;
+    padding: 30px 30px 0;
+    border-bottom: 1px solid rgba($gray-color, 0.1);
+    margin-bottom: 30px;
+  }
+  
+  &__title {
+    font-size: $font-size-xl;
+    color: $secondary-color;
+    margin: 0;
+  }
+  
+  &__close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: $gray-color;
+    width: 30px;
+    height: 30px;
+    @include flex-center;
+    border-radius: 50%;
+    transition: $transition-base;
+    
+    &:hover {
+      background: rgba($gray-color, 0.1);
+      color: $dark-color;
+    }
+  }
+  
+  &__body {
+    padding: 0 30px 30px;
+  }
+}
+
+// Calculator
+.calculator {
+  &__form {
+    margin-bottom: 30px;
+  }
+  
+  &__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+    
+    @include media-breakpoint-down(sm) {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  &__result {
+    text-align: center;
+    padding: 30px;
+    background: $light-color;
+    border-radius: $border-radius-lg;
+    border: 2px solid $primary-color;
+  }
+  
+  &__result-title {
+    font-size: $font-size-lg;
+    color: $secondary-color;
+    margin-bottom: 15px;
+  }
+  
+  &__result-price {
+    font-size: 36px;
+    font-weight: $font-weight-bold;
+    color: $primary-color;
+    margin-bottom: 10px;
+  }
+  
+  &__result-note {
+    font-size: $font-size-sm;
+    color: $gray-color;
+    font-style: italic;
+  }
+}
+
+// Animations
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// Utility classes
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.d-none {
+  display: none;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.h-100 {
+  height: 100%;
+}
+
+// Responsive utilities (продолжение)
+@include media-breakpoint-down(md) {
+  .d-md-none {
+    display: none;
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  .d-sm-none {
+    display: none;
+  }
+}
+
+// Scroll animations
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s ease-out;
+  
+  &.animated {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Loading states
+.loading {
+  position: relative;
+  pointer-events: none;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid transparent;
+    border-top: 2px solid $primary-color;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+}
+
+// Interactive elements
+.interactive-element {
+  cursor: pointer;
+  transition: $transition-base;
+  
+  &:hover {
+    transform: scale(1.02);
+  }
+  
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+// Custom scrollbar
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: $light-color;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $primary-color;
+  border-radius: 4px;
+  
+  &:hover {
+    background: color.adjust($primary-color, $lightness: -10%);
+  }
+}
+
+// Selection
+::selection {
+  background: rgba($primary-color, 0.2);
+  color: $dark-color;
+}
+
+::-moz-selection {
+  background: rgba($primary-color, 0.2);
+  color: $dark-color;
+}
+
+// Focus styles
+*:focus {
+  outline: 2px solid $primary-color;
+  outline-offset: 2px;
+}
+
+button:focus,
+.btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba($primary-color, 0.3);
+}
+
+// Print styles
+@media print {
+  .header,
+  .footer,
+  .btn,
+  .contact-form,
+  .modal {
+    display: none !important;
+  }
+  
+  body {
+    font-size: 12pt;
+    line-height: 1.4;
+  }
+  
+  .hero {
+    min-height: auto;
+    padding: 20pt 0;
+  }
+}
+
+// Mobile-specific styles
+@include media-breakpoint-down(sm) {
+  .hero {
+    &__content {
+      gap: 30px;
+    }
+    
+    &__title {
+      font-size: 28px;
+    }
+    
+    &__benefits {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+  
+  .benefit {
+    &__text {
+      white-space: normal;
+      text-align: center;
+    }
+  }
+  
+  .choice-grid,
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .advantages-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .map-content,
+  .contact-content {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .contact-form {
+    padding: 30px 20px;
+  }
+  
+  .modal {
+    &__content {
+      width: 95%;
+      margin: 20px;
+    }
+    
+    &__header,
+    &__body {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+  
+  .calculator {
+    &__row {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    
+    &__result-price {
+      font-size: 28px;
+    }
+  }
+}
+
+// High contrast mode
+@media (prefers-contrast: high) {
+  .hero {
+    background: $dark-color;
+  }
+  
+  .btn--secondary {
+    border-width: 3px;
+  }
+  
+  .choice-card,
+  .service-card {
+    border-width: 2px;
+    border-color: $dark-color;
+  }
+}
+
+// Reduced motion
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .hero__bg-animation {
+    animation: none;
+  }
+}
+
+// Dark mode support (если потребуется в будущем)
+@media (prefers-color-scheme: dark) {
+  // Можно добавить темную тему
+}
