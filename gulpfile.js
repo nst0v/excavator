@@ -8,7 +8,7 @@ const fs = require('fs');
 // Paths
 const paths = {
   html: {
-    src: 'src/*.html',
+    src: '*.html',
     dest: 'dist/'
   },
   styles: {
