@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excavator - Аренда спецтехники | Надежный логист</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header__content">
+                <div class="logo">
+                    <span class="logo__text">EXCAVATOR</span>
+                    <span class="logo__subtitle">логистика спецтехники</span>
+                </div>
+                <nav class="nav">
+                    <a href="#services" class="nav__link">Услуги</a>
+                    <a href="#advantages" class="nav__link">Преимущества</a>
+                    <a href="#contacts" class="nav__link">Контакты</a>
+                    <a href="#cabinet" class="nav__link nav__link--accent">Личный кабинет</a>
+                </nav>
+                <div class="header__contacts">
+                    <a href="tel:+79999999999" class="phone">+7 (999) 999-99-99</a>
+                    <div class="messengers">
+                        <a href="#" class="messenger messenger--telegram"></a>
+                        <a href="#" class="messenger messenger--whatsapp"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero__bg-animation"></div>
+        <div class="container">
+            <div class="hero__content">
+                <div class="hero__text">
+                    <h1 class="hero__title">
+                        Вся спецтехника<br>
+                        <span class="hero__title-accent">через одного агента</span>
+                    </h1>
+                    <p class="hero__subtitle">
+                        Экономьте время и деньги. Работайте с надежным логистом,<br>
+                        который знает рынок и гарантирует результат.
+                    </p>
+                    <div class="hero__benefits">
+                        <div class="benefit">
+                            <span class="benefit__icon">💰</span>
+                            <span class="benefit__text">Комиссия ниже на 15-30%</span>
+                        </div>
+                        <div class="benefit">
+                            <span class="benefit__icon">⚡</span>
+                            <span class="benefit__text">Подбор за 30 минут</span>
+                        </div>
+                        <div class="benefit">
+                            <span class="benefit__icon">🛡️</span>
+                            <span class="benefit__text">Полная ответственность</span>
+                        </div>
+                    </div>
+                    <div class="hero__actions">
+                        <button class="btn btn--primary" id="orderBtn">Заказать технику</button>
+                        <button class="btn btn--secondary" id="calculateBtn">Рассчитать стоимость</button>
+                    </div>
+                </div>
+                <div class="hero__visual">
+                    <div class="hero__image-container">
+                        <div class="hero__image hero__image--1 active"></div>
+                        <div class="hero__image hero__image--2"></div>
+                        <div class="hero__image hero__image--3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Choice Section -->
+    <section class="choice-section">
+        <div class="container">
+            <h2 class="choice-section__title">Что для вас важнее всего?</h2>
+            <p class="choice-section__subtitle">Выберите приоритет и получите персональное предложение</p>
+            <div class="choice-grid">
+                <div class="choice-card" data-choice="price">
+                    <div class="choice-card__icon">💰</div>
+                    <h3 class="choice-card__title">Минимальная цена</h3>
+                    <p class="choice-card__text">Найдем самое выгодное предложение на рынке</p>
+                </div>
+                <div class="choice-card" data-choice="speed">
+                    <div class="choice-card__icon">⚡</div>
+                    <h3 class="choice-card__title">Скорость подачи</h3>
+                    <p class="choice-card__text">Техника будет на объекте в кратчайшие сроки</p>
+                </div>
+                <div class="choice-card" data-choice="quality">
+                    <div class="choice-card__icon">⭐</div>
+                    <h3 class="choice-card__title">Качество техники</h3>
+                    <p class="choice-card__text">Только проверенная техника в отличном состоянии</p>
+                </div>
+                <div class="choice-card" data-choice="service">
+                    <div class="choice-card__icon">🤝</div>
+                    <h3 class="choice-card__title">Сервис и поддержка</h3>
+                    <p class="choice-card__text">Полное сопровождение на всех этапах работы</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services" id="services">
+        <div class="container">
+            <h2 class="section-title">Какую технику ищете?</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-card__icon">🚜</div>
+                    <h3 class="service-card__title">Экскаваторы</h3>
+                    <p class="service-card__text">От мини до 40+ тонн</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-card__icon">🚛</div>
+                    <h3 class="service-card__title">Самосвалы</h3>
+                    <p class="service-card__text">Любая грузоподъемность</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-card__icon">🏗️</div>
+                    <h3 class="service-card__title">Краны</h3>
+                    <p class="service-card__text">Автокраны и башенные</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-card__icon">🚧</div>
+                    <h3 class="service-card__title">Дорожная техника</h3>
+                    <p class="service-card__text">Катки, асфальтоукладчики</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Advantages Section -->
+    <section class="advantages" id="advantages">
+        <div class="container">
+            <h2 class="section-title">Почему выбирают меня</h2>
+            <div class="advantages-grid">
+                <div class="advantage-card">
+                    <div class="advantage-card__number">01</div>
+                    <h3 class="advantage-card__title">Знаю рынок изнутри</h3>
+                    <p class="advantage-card__text">5+ лет в логистике спецтехники. Работаю напрямую с владельцами, без посредников.</p>
+                </div>
+                <div class="advantage-card">
+                    <div class="advantage-card__number">02</div>
+                    <h3 class="advantage-card__title">Экономлю ваши деньги</h3>
+                    <p class="advantage-card__text">Моя комиссия ниже на 15-30%. При том же уровне сервиса вы платите меньше.</p>
+                </div>
+                <div class="advantage-card">
+                    <div class="advantage-card__number">03</div>
+                    <h3 class="advantage-card__title">Беру ответственность</h3>
+                    <p class="advantage-card__text">Все риски на мне. Техника не подошла или сломалась? Решаю проблему за свой счет.</p>
+                </div>
+                <div class="advantage-card">
+                    <div class="advantage-card__number">04</div>
+                    <h3 class="advantage-card__title">Всегда на связи</h3>
+                    <p class="advantage-card__text">Telegram, WhatsApp, звонки. Отвечаю быстро, работаю без выходных.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section class="map-section">
+        <div class="container">
+            <div class="map-content">
+                <div class="map-info">
+                    <h2 class="map-info__title">География работы</h2>
+                    <p class="map-info__text">
+                        Работаю по всей Московской области и ближайшим регионам. 
+                        Доставка техники в любую точку в радиусе 200 км от МКАД.
+                    </p>
+                    <div class="map-stats">
+                        <div class="map-stat">
+                            <span class="map-stat__number">200+</span>
+                            <span class="map-stat__text">объектов</span>
+                        </div>
+                        <div class="map-stat">
+                            <span class="map-stat__number">50+</span>
+                            <span class="map-stat__text">единиц техники</span>
+                        </div>
+                        <div class="map-stat">
+                            <span class="map-stat__number">24/7</span>
+                            <span class="map-stat__text">поддержка</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="map-container">
+                    <div id="map" class="map"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section" id="contacts">
+        <div class="container">
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h2 class="contact-info__title">Готовы начать?</h2>
+                    <p class="contact-info__text">
+                        Звоните, пишите в мессенджеры или оставляйте заявку. 
+                        Подберу технику и рассчитаю стоимость в течение 30 минут.
+                    </p>
+                    <div class="contact-methods">
+                        <a href="tel:+79999999999" class="contact-method">
+                            <span class="contact-method__icon">📞</span>
+                            <span class="contact-method__text">+7 (999) 999-99-99</span>
+                        </a>
+                        <a href="#" class="contact-method">
+                            <span class="contact-method__icon">✈️</span>
+                            <span class="contact-method__text">Telegram</span>
+                        </a>
+                        <a href="#" class="contact-method">
+                            <span class="contact-method__icon">💬</span>
+                            <span class="contact-method__text">WhatsApp</span>
+                        </a>
+                    </div>
+                </div>
+                <form class="contact-form" id="contactForm">
+                    <h3 class="contact-form__title">Быстрая заявка</h3>
+                    <input type="text" placeholder="Ваше имя" class="form-input" required>
+                    <input type="tel" placeholder="Телефон" class="form-input" required>
+                    <select class="form-select" required>
+                        <option value="">Тип техники</option>
+                        <option value="excavator">Экскаватор</option>
+                        <option value="truck">Самосвал</option>
+                        <option value="crane">Кран</option>
+                        <option value="other">Другое</option>
+                    </select>
+                    <textarea placeholder="Комментарий к заказу" class="form-textarea"></textarea>
+                    <button type="submit" class="btn btn--primary btn--full">Отправить заявку</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__content">
+                <div class="footer__main">
+                    <div class="logo">
+                        <span class="logo__text">EXCAVATOR</span>
+                        <span class="logo__subtitle">логистика спецтехники</span>
+                    </div>
+                    <p class="footer__description">
+                        Индивидуальный предприниматель. Аренда спецтехники 
+                        с персональным подходом и выгодными условиями.
+                    </p>
+                </div>
+                <div class="footer__contacts">
+                    <a href="tel:+79999999999" class="footer__phone">+7 (999) 999-99-99</a>
+                    <div class="footer__messengers">
+                        <a href="#" class="messenger messenger--telegram"></a>
+                        <a href="#" class="messenger messenger--whatsapp"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer__bottom">
+                <p class="footer__copyright">© 2024 Excavator. Все права защищены.</p>
+                <div class="footer__links">
+                    <a href="#cabinet" class="footer__link">Личный кабинет</a>
+                    <a href="#" class="footer__link">Политика конфиденциальности</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

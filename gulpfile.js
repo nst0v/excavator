@@ -5,30 +5,30 @@ const browserSync = require('browser-sync').create();
 const sourcemaps = require('gulp-sourcemaps');
 const fs = require('fs');
 
-// Paths
+// Paths - изменяем на docs
 const paths = {
   html: {
-    src: '*.html',
-    dest: 'dist/'
+    src: 'src/*.html',
+    dest: 'docs/'  // Изменено с 'dist/' на 'docs/'
   },
   styles: {
     src: 'src/scss/**/*.scss',
-    dest: 'dist/css/'
+    dest: 'docs/css/'  // Изменено с 'dist/css/' на 'docs/css/'
   },
   scripts: {
     src: 'src/js/**/*.js',
-    dest: 'dist/js/'
+    dest: 'docs/js/'  // Изменено с 'dist/js/' на 'docs/js/'
   },
   images: {
     src: 'src/images/**/*',
-    dest: 'dist/images/'
+    dest: 'docs/images/'  // Изменено с 'dist/images/' на 'docs/images/'
   }
 };
 
-// Clean dist folder
+// Clean docs folder
 function clean(cb) {
-  if (fs.existsSync('dist')) {
-    fs.rmSync('dist', { recursive: true, force: true });
+  if (fs.existsSync('docs')) {
+    fs.rmSync('docs', { recursive: true, force: true });
   }
   cb();
 }
@@ -81,7 +81,7 @@ function watchFiles() {
 function serve() {
   browserSync.init({
     server: {
-      baseDir: './dist'
+      baseDir: './docs'  // Изменено с './dist' на './docs'
     },
     port: 3000
   });
