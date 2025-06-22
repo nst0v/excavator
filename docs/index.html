@@ -214,6 +214,12 @@
                           <option value="crane">Кран</option>
                           <option value="bulldozer">Бульдозер</option>
                           <option value="loader">Погрузчик</option>
+                          <option value="mixer">Автомиксер</option>
+                          <option value="manipulator">Манипулятор</option>
+                          <option value="miniloader">Минипогрузчик</option>
+                          <option value="asphalt-roller">Каток</option>
+                          <option value="tral">Трал</option>
+                          <option value="yamobur">Ямобур</option>
                           <option value="other">Другое</option>
                       </select>
                       <select class="form-select" required>
@@ -279,27 +285,81 @@
             });
             
             var cities = [
-                {name: 'Симферополь', coords: [44.9572, 34.1108]},
-                {name: 'Севастополь', coords: [44.6054, 33.5221]},
-                {name: 'Ялта', coords: [44.4952, 34.1664]},
-                {name: 'Евпатория', coords: [45.1983, 33.3669]},
-                {name: 'Керчь', coords: [45.3606, 36.4706]},
-                {name: 'Феодосия', coords: [45.0308, 35.3828]},
-                {name: 'Джанкой', coords: [45.7117, 34.3911]}
-
+                {name: 'Симферополь', coords: [44.9572, 34.1108], equipment: 'excavator'},
+                {name: 'Севастополь', coords: [44.6054, 33.5221], equipment: 'truck'},
+                {name: 'Ялта', coords: [44.4952, 34.1664], equipment: 'crane'},
+                {name: 'Евпатория', coords: [45.1983, 33.3669], equipment: 'bulldozer'},
+                {name: 'Керчь', coords: [45.3606, 36.4706], equipment: 'loader'},
+                {name: 'Феодосия', coords: [45.0308, 35.3828], equipment: 'mixer'},
+                {name: 'Джанкой', coords: [45.7117, 34.3911], equipment: 'excavator'}
             ];
             
             cities.forEach(function(city) {
                 var placemark = new ymaps.Placemark(city.coords, {
                     balloonContent: city.name + '<br>Работаем в этом регионе'
                 }, {
-                    preset: 'islands#redDotIcon'
+                    iconLayout: 'default#image',
+                    iconImageHref: 'images/equipment/' + city.equipment + '.png',
+                    iconImageSize: [32, 32],
+                    iconImageOffset: [-16, -16]
                 });
                 myMap.geoObjects.add(placemark);
             });
         });
-    </script>
+        </script>
     
     <script src="js/main.js"></script>
+    
+    <!-- Модальные окна -->
+    <!-- Модальное окно "Рассчитать стоимость" -->
+    <div class="modal" id="calculateModal">
+        <div class="modal__overlay">
+            <div class="modal__content">
+                <button class="modal__close" id="closeCalculateModal">&times;</button>
+                <form class="modal-form" id="calculateForm">
+                    <h3 class="modal-form__title">Рассчитать стоимость</h3>
+                    <input type="text" placeholder="Ваше имя" class="form-input" required>
+                    <input type="tel" placeholder="Телефон" class="form-input" required>
+                    <input type="text" placeholder="Место проведения работ" class="form-input" required>
+                    <select class="form-select" required>
+                        <option value="">Тип техники</option>
+                        <option value="excavator">Экскаватор</option>
+                        <option value="truck">Самосвал</option>
+                        <option value="crane">Кран</option>
+                        <option value="bulldozer">Бульдозер</option>
+                        <option value="loader">Погрузчик</option>
+                        <option value="mixer">Автомиксер</option>
+                        <option value="manipulator">Манипулятор</option>
+                        <option value="miniloader">Минипогрузчик</option>
+                        <option value="asphalt-roller">Каток</option>
+                        <option value="tral">Трал</option>
+                        <option value="yamobur">Ямобур</option>
+                        <option value="other">Другое</option>
+                    </select>
+                    <select class="form-select" required>
+                        <option value="">Желаемая дата</option>
+                        <option value="today">Сегодня</option>
+                        <option value="tomorrow">Завтра</option>
+                        <option value="this-week">На этой неделе</option>
+                        <option value="next-week">На следующей неделе</option>
+                    </select>
+                    <textarea placeholder="Объём работ" class="form-textarea" required></textarea>
+                    <button type="submit" class="btn btn--primary btn--full">Получить расчёт</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно "Заявка принята" -->
+    <div class="modal modal--success" id="successModal">
+        <div class="modal__overlay">
+            <div class="modal__content modal__content--success">
+                <div class="success-icon">✓</div>
+                <h3 class="success-title">Ваша заявка принята</h3>
+                <p class="success-text">Мы свяжемся с вами в ближайшее время</p>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
