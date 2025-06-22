@@ -19,7 +19,7 @@ body {
   font-size: $font-size-base;
   line-height: $line-height-base;
   color: $white-color;
-  background: $asphalt-dark; // Убираем градиент, используем сплошной цвет
+  background: $asphalt-dark;
   overflow-x: hidden;
 }
 
@@ -51,7 +51,7 @@ body {
   }
 }
 
-// Typography (продолжение)
+// Typography
 h1, h2, h3, h4, h5, h6 {
   font-weight: $font-weight-bold;
   line-height: $line-height-sm;
@@ -111,11 +111,11 @@ a {
   min-height: 48px;
   
   &--primary {
-    background: $primary-gradient; // Теперь это сплошной цвет
+    background: $primary-gradient;
     color: $white-color;
     
     &:hover {
-      background: $accent-color; // Меняем цвет при hover
+      background: $accent-color;
       transform: translateY(-2px);
       box-shadow: $shadow-lg;
     }
@@ -284,7 +284,6 @@ a {
   background: $hero-gradient;
   overflow: hidden;
   
-  // Единый фон с анимацией для всего блока
   &::before {
     content: '';
     position: absolute;
@@ -301,27 +300,28 @@ a {
   }
 }
 
-// Hero section - убираем фон, он теперь у родителя
+// Hero section - новая структура с тремя колонками
 .hero {
   position: relative;
   min-height: 100vh;
-  background: none; // Убираем фон
+  background: none;
   color: $white-color;
   @include flex-center;
   padding-top: 80px;
   z-index: 1;
   
-  // Убираем собственную анимацию фона
-  &__bg-animation {
-    display: none; // Отключаем, используем общий фон
-  }
-  
   &__content {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
+    grid-template-columns: 1fr 400px 1fr; // Левый текст, картинка по центру, правый текст
+    gap: 40px;
     align-items: center;
     width: 100%;
+    max-width: 1400px;
+    
+    @include media-breakpoint-down(xl) {
+      grid-template-columns: 1fr 350px 1fr;
+      gap: 30px;
+    }
     
     @include media-breakpoint-down(lg) {
       grid-template-columns: 1fr;
@@ -330,15 +330,13 @@ a {
     }
   }
   
-  &__text {
-    animation: slideUp 0.8s ease-out 0.2s both;
-  }
-  
   &__title {
     font-size: $font-size-hero;
     font-weight: $font-weight-bold;
     line-height: 1.1;
     margin-bottom: map.get($spacers, 4);
+    text-align: center;
+    grid-column: 1 / -1; // Заголовок на всю ширину
     
     @include media-breakpoint-down(lg) {
       font-size: 40px;
@@ -350,63 +348,77 @@ a {
   }
   
   &__title-accent {
-    color: $primary-color; // Убираем градиент текста, используем сплошной цвет
+    color: $primary-color;
     display: block;
   }
   
-  &__text-blocks {
-    margin-bottom: map.get($spacers, 4);
+  // Левый блок текста
+  &__text-left {
+    animation: slideUp 0.8s ease-out 0.2s both;
+    
+    @include media-breakpoint-down(lg) {
+      order: 2;
+    }
+  }
+  
+  // Правый блок текста
+  &__text-right {
+    animation: slideUp 0.8s ease-out 0.4s both;
+    
+    @include media-breakpoint-down(lg) {
+      order: 3;
+    }
   }
   
   &__text-block {
     font-size: $font-size-base;
     line-height: $line-height-lg;
-    margin-bottom: map.get($spacers, 2);
+    margin-bottom: map.get($spacers, 3);
     opacity: 0.9;
     
     @include media-breakpoint-down(md) {
       font-size: $font-size-sm;
     }
-  }
-  
-  &__priority-text {
-    font-size: $font-size-lg;
-    font-weight: $font-weight-medium;
-    color: $accent-color;
-    margin-bottom: map.get($spacers, 5);
-    text-align: center;
     
-    @include media-breakpoint-down(md) {
-      font-size: $font-size-base;
-    }
-  }
-  
-  &__actions {
-    display: flex;
-    gap: 20px;
+    // Анимация появления для каждого блока
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideUpStagger 0.6s ease-out forwards;
     
-    @include media-breakpoint-down(md) {
-      flex-direction: column;
-      align-items: center;
-    }
+    &:nth-child(1) { animation-delay: 0.2s; }
+    &:nth-child(2) { animation-delay: 0.4s; }
+    &:nth-child(3) { animation-delay: 0.6s; }
+    &:nth-child(4) { animation-delay: 0.8s; }
   }
   
+  // Центральная картинка
   &__visual {
     position: relative;
-    animation: slideUp 0.8s ease-out 0.4s both;
+    animation: slideUp 0.8s ease-out 0.3s both;
+    justify-self: center;
     
     @include media-breakpoint-down(lg) {
-      order: -1;
+      order: 1;
     }
   }
   
   &__image-container {
     position: relative;
     width: 100%;
-    height: 400px;
+    height: 500px;
     border-radius: $border-radius-xl;
     overflow: hidden;
     box-shadow: $shadow-xl;
+    
+    @include media-breakpoint-down(xl) {
+      height: 450px;
+    }
+    
+    @include media-breakpoint-down(lg) {
+      height: 400px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
     
     @include media-breakpoint-down(md) {
       height: 300px;
@@ -429,17 +441,38 @@ a {
     }
   }
   
-  &__question-mark {
-    @include flex-center;
-    animation: float 6s ease-in-out infinite;
+  // Приоритетный текст и кнопки
+  &__priority-text {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-medium;
+    color: $accent-color;
+    margin-bottom: map.get($spacers, 4);
+    text-align: center;
+    grid-column: 1 / -1; // На всю ширину
+    
+    @include media-breakpoint-down(md) {
+      font-size: $font-size-base;
+    }
+  }
+  
+  &__actions {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    grid-column: 1 / -1; // На всю ширину
+    
+    @include media-breakpoint-down(md) {
+      flex-direction: column;
+      align-items: center;
+    }
   }
 }
 
-// Equipment Icons Section - убираем фон
+// Equipment Icons Section
 .equipment-icons {
   position: relative;
   padding: map.get($spacers, 6) 0;
-  background: none; // Убираем фон
+  background: none;
   z-index: 1;
   
   &__grid {
@@ -482,7 +515,6 @@ a {
   border: 2px solid transparent;
   aspect-ratio: 1;
   min-height: 180px;
-  
   &:hover {
     border-color: $primary-color;
     transform: translateY(-3px);
@@ -491,10 +523,10 @@ a {
   }
   
   &__image {
-    width: 80px; // Увеличиваем размер изображения
+    width: 80px;
     height: 80px;
     object-fit: contain;
-    margin-bottom: 15px; // Увеличиваем отступ
+    margin-bottom: 15px;
     filter: grayscale(100%);
     transition: $transition-base;
     
@@ -516,7 +548,7 @@ a {
   
   &__label {
     display: block;
-    font-size: $font-size-lg; // Увеличиваем размер шрифта
+    font-size: $font-size-lg;
     font-weight: $font-weight-medium;
     color: $asphalt-dark;
     transition: $transition-base;
@@ -919,6 +951,13 @@ a {
   }
 }
 
+@keyframes slideUpStagger {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes pulse {
   0%, 100% {
     transform: scale(1);
@@ -1053,6 +1092,10 @@ button:focus,
     &__title {
       font-size: 28px;
     }
+    
+    &__image-container {
+      height: 200px;
+    }
   }
   
   .services-advantages {
@@ -1064,6 +1107,7 @@ button:focus,
   
   .map-content,
   .contact-content {
+
     grid-template-columns: 1fr;
     gap: 30px;
   }
