@@ -9,6 +9,42 @@ class SpezzApp {
         this.initForms();
         this.initHeader();
         this.initModal();
+        this.initMobileTextRotation();
+    }
+
+    initMobileTextRotation() {
+        const mobileTextCard = document.getElementById('mobileTextCard');
+        
+        if (!mobileTextCard || window.innerWidth > 992) {
+            return;
+        }
+        
+        const texts = [
+            'В моей базе более <strong>1500 единиц</strong> техники<br>С каждым владельцем я знаком лично.',
+            'Договорюсь по лучшей цене за вас<br>Я беру себе <strong>5-10%</strong> от стоимости заказа.',
+            'Предлагаю <strong>лучшие цены</strong> для бизнеса<br>Всю технику вы оплачиваете на один счёт.',
+            'Я могу <strong>подменить технику</strong> если она сломается<br>Есть собственный бульдозер и кое что еще.',
+            'Я работаю <strong>с НДС</strong> (от 10 смен)<br>Есть скидка на ГСМ и строительные материалы.'
+        ];
+        
+        let currentIndex = 0;
+        
+        const rotateText = () => {
+            mobileTextCard.classList.add('fade-out');
+            
+            setTimeout(() => {
+                currentIndex = (currentIndex + 1) % texts.length;
+                mobileTextCard.innerHTML = texts[currentIndex];
+                mobileTextCard.classList.remove('fade-out');
+                mobileTextCard.classList.add('fade-in');
+                
+                setTimeout(() => {
+                    mobileTextCard.classList.remove('fade-in');
+                }, 500);
+            }, 250);
+        };
+        
+        setInterval(rotateText, 4000);
     }
 
     initScrollAnimations() {
