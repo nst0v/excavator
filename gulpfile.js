@@ -5,23 +5,23 @@ const browserSync = require('browser-sync').create();
 const sourcemaps = require('gulp-sourcemaps');
 const fs = require('fs');
 
-// Paths - изменяем на docs
+// Paths
 const paths = {
   html: {
     src: 'src/*.html',
-    dest: 'docs/'  // Изменено с 'dist/' на 'docs/'
+    dest: 'docs/'
   },
   styles: {
     src: 'src/scss/**/*.scss',
-    dest: 'docs/css/'  // Изменено с 'dist/css/' на 'docs/css/'
+    dest: 'docs/css/'
   },
   scripts: {
     src: 'src/js/**/*.js',
-    dest: 'docs/js/'  // Изменено с 'dist/js/' на 'docs/js/'
+    dest: 'docs/js/'
   },
-  images: {
-    src: 'src/images/**/*',
-    dest: 'docs/images/'  // Изменено с 'dist/images/' на 'docs/images/'
+  public: {
+    src: 'public/**/*',
+    dest: 'docs/'
   }
 };
 
@@ -63,10 +63,13 @@ function scripts() {
     .pipe(browserSync.stream());
 }
 
-// Images task
-function images() {
-  return gulp.src(paths.images.src)
-    .pipe(gulp.dest(paths.images.dest));
+// Копирование файлов из public с правильной обработкой бинарных файлов
+function copyPublic() {
+  return gulp.src(paths.public.src, { 
+    buffer: true,  // Важно для бинарных файлов
+    encoding: false // Не применять кодировку к бинарным файлам
+  })
+    .pipe(gulp.dest(paths.public.dest));
 }
 
 // Watch files
@@ -74,21 +77,22 @@ function watchFiles() {
   gulp.watch(paths.html.src, html);
   gulp.watch(paths.styles.src, styles);
   gulp.watch(paths.scripts.src, scripts);
-  gulp.watch(paths.images.src, images);
+  gulp.watch(paths.public.src, copyPublic);
 }
 
 // BrowserSync
 function serve() {
   browserSync.init({
     server: {
-      baseDir: './docs'  // Изменено с './dist' на './docs'
+      baseDir: './docs'
     },
     port: 3000
   });
 }
 
 // Build task
-const build = gulp.series(clean, gulp.parallel(html, styles, scripts, images));
+const build = gulp.series(clean, gulp.parallel(html, styles, scripts, copyPublic));
+const dev = gulp.series(clean, gulp.parallel(html, styles, scripts, copyPublic), gulp.parallel(serve, watchFiles));
 
 // Watch task
 const watch = gulp.series(build, gulp.parallel(watchFiles, serve));
@@ -98,7 +102,7 @@ exports.clean = clean;
 exports.html = html;
 exports.styles = styles;
 exports.scripts = scripts;
-exports.images = images;
+exports.copyPublic = copyPublic;
 exports.build = build;
 exports.watch = watch;
 exports.default = watch;

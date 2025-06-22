@@ -1,275 +1,357 @@
-// Main JavaScript functionality
-(function() {
-    'use strict';
+class SpezzApp {
+    constructor() {
+        this.init();
+    }
 
-    // Global variables
-    let isLoading = false;
-    let notifications = [];
+    init() {
+        this.initScrollAnimations();
+        this.initEquipmentIcons();
+        this.initForms();
+        this.initHeader();
+        this.initModal();
+    }
 
-    // Utility functions
-    const utils = {
-        debounce: function(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
-        },
-
-        throttle: function(func, limit) {
-            let inThrottle;
-            return function() {
-                const args = arguments;
-                const context = this;
-                if (!inThrottle) {
-                    func.apply(context, args);
-                    inThrottle = true;
-                    setTimeout(() => inThrottle = false, limit);
-                }
-            };
-        },
-
-        formatPhone: function(phone) {
-            const cleaned = phone.replace(/\D/g, '');
-            if (cleaned.length === 11 && cleaned.startsWith('7')) {
-                return `+7 (${cleaned.slice(1, 4)}) ${cleaned.slice(4, 7)}-${cleaned.slice(7, 9)}-${cleaned.slice(9, 11)}`;
-            }
-            return phone;
-        },
-
-        validateEmail: function(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(email);
-        }
-    };
-
-    // Notification system
-    const NotificationManager = {
-        create: function(message, type = 'info', duration = 5000) {
-            const notification = document.createElement('div');
-            notification.className = `notification notification--${type}`;
-            
-            const icons = {
-                success: '✅',
-                error: '❌',
-                warning: '⚠️',
-                info: 'ℹ️'
-            };
-            
-            notification.innerHTML = `
-                <div class="notification__content">
-                    <span class="notification__icon">${icons[type] || icons.info}</span>
-                    <span class="notification__text">${message}</span>
-                    <button class="notification__close" type="button">×</button>
-                </div>
-            `;
-            
-            document.body.appendChild(notification);
-            
-            // Show notification
-            setTimeout(() => notification.classList.add('show'), 100);
-            
-            // Auto hide
-            const autoHide = setTimeout(() => {
-                this.remove(notification);
-            }, duration);
-            
-            // Manual close
-            const closeBtn = notification.querySelector('.notification__close');
-            closeBtn.addEventListener('click', () => {
-                clearTimeout(autoHide);
-                this.remove(notification);
+    initScrollAnimations() {
+        const elements = document.querySelectorAll('.animate-on-scroll');
+        
+        if (elements.length > 0) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animated');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
             });
             
-            notifications.push(notification);
-            return notification;
-        },
-        
-        remove: function(notification) {
-            notification.classList.remove('show');
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.parentNode.removeChild(notification);
-                }
-                const index = notifications.indexOf(notification);
-                if (index > -1) {
-                    notifications.splice(index, 1);
-                }
-            }, 300);
-        },
-        
-        clear: function() {
-            notifications.forEach(notification => this.remove(notification));
+            elements.forEach(element => {
+                observer.observe(element);
+            });
         }
-    };
+    }
 
-    // Modal system
-    const ModalManager = {
-        current: null,
+    initEquipmentIcons() {
+        const equipmentIcons = document.querySelectorAll('.equipment-icon');
         
-        open: function(content, options = {}) {
-            this.close(); // Close any existing modal
-            
-            const modal = document.createElement('div');
-            modal.className = 'modal';
-            
-            modal.innerHTML = `
+        equipmentIcons.forEach(icon => {
+            icon.addEventListener('click', () => {
+                const contactForm = document.getElementById('contactForm');
+                if (contactForm) {
+                    contactForm.scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+                
+                const equipmentType = icon.dataset.equipment;
+                const selectElement = contactForm.querySelector('select[required]');
+                if (selectElement && equipmentType) {
+                    selectElement.value = equipmentType;
+                    selectElement.focus();
+                }
+            });
+        });
+    }
+
+    initForms() {
+        // Форма обратного звонка
+        const callbackForm = document.getElementById('callbackForm');
+        if (callbackForm) {
+            callbackForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.handleCallbackForm(callbackForm);
+            });
+        }
+
+        // Основная форма заявки
+        const contactForm = document.getElementById('contactForm');
+        if (contactForm) {
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.handleContactForm(contactForm);
+            });
+        }
+
+        // Кнопки в hero секции
+        const orderBtn = document.getElementById('orderBtn');
+        const calculateBtn = document.getElementById('calculateBtn');
+
+        if (orderBtn) {
+            orderBtn.addEventListener('click', () => {
+                document.getElementById('contactForm').scrollIntoView({ 
+                    behavior: 'smooth' 
+                });
+            });
+        }
+
+        if (calculateBtn) {
+            calculateBtn.addEventListener('click', () => {
+                this.showCalculatorModal();
+            });
+        }
+    }
+
+    initModal() {
+        // Создаем модальное окно для калькулятора
+        const modalHTML = `
+            <div class="modal" id="calculatorModal">
                 <div class="modal__content">
                     <div class="modal__header">
-                        <h3 class="modal__title">${options.title || 'Модальное окно'}</h3>
-                        <button class="modal__close" type="button">×</button>
+                        <h3 class="modal__title">Расчет стоимости</h3>
+                        <button class="modal__close" type="button">&times;</button>
                     </div>
                     <div class="modal__body">
-                        ${content}
+                        <form class="calculator-form" id="calculatorForm">
+                            <div class="calculator-form__row">
+                                <select class="form-select" required>
+                                    <option value="">Тип техники</option>
+                                    <option value="excavator">Экскаватор</option>
+                                    <option value="truck">Самосвал</option>
+                                    <option value="crane">Кран</option>
+                                    <option value="bulldozer">Бульдозер</option>
+                                    <option value="loader">Погрузчик</option>
+                                </select>
+                                <input type="number" placeholder="Часов работы" class="form-input" min="1" required>
+                            </div>
+                            <input type="text" placeholder="Место работ" class="form-input" required>
+                            <textarea placeholder="Описание работ" class="form-textarea" rows="3"></textarea>
+                            <input type="tel" placeholder="Ваш телефон для расчета" class="form-input" required>
+                            <button type="submit" class="btn btn--primary btn--full">Получить расчет</button>
+                        </form>
                     </div>
                 </div>
-            `;
-            
-            document.body.appendChild(modal);
-            document.body.style.overflow = 'hidden';
-            
-            // Show modal
-            setTimeout(() => modal.classList.add('show'), 100);
-            
-            // Close handlers
-            const closeBtn = modal.querySelector('.modal__close');
-            closeBtn.addEventListener('click', () => this.close());
-            
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    this.close();
-                }
-            });
-            
-            // ESC key handler
-            const escHandler = (e) => {
-                if (e.key === 'Escape') {
-                    this.close();
-                    document.removeEventListener('keydown', escHandler);
-                }
-            };
-            document.addEventListener('keydown', escHandler);
-            
-            this.current = modal;
-            return modal;
-        },
+            </div>
+        `;
         
-        close: function() {
-            if (this.current) {
-                this.current.classList.remove('show');
-                setTimeout(() => {
-                    if (this.current && this.current.parentNode) {
-                        this.current.parentNode.removeChild(this.current);
-                    }
-                    document.body.style.overflow = '';
-                    this.current = null;
-                }, 300);
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        
+        // Обработчики для модального окна
+        const modal = document.getElementById('calculatorModal');
+        const closeBtn = modal.querySelector('.modal__close');
+        const form = document.getElementById('calculatorForm');
+        
+        closeBtn.addEventListener('click', () => {
+            this.hideModal('calculatorModal');
+        });
+        
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                this.hideModal('calculatorModal');
             }
-        }
-    };
-
-    // Calculator functionality
-    const Calculator = {
-        rates: {
-            excavator: { base: 2500, hourly: 1200 },
-            truck: { base: 2000, hourly: 800 },
-            crane: { base: 4000, hourly: 2000 },
-            other: { base: 3000, hourly: 1500 }
-        },
+        });
         
-        calculate: function(type, hours, distance = 0) {
-            const rate = this.rates[type] || this.rates.other;
-            const basePrice = rate.base;
-            const workPrice = rate.hourly * hours;
-            const deliveryPrice = distance * 50; // 50 руб за км
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.handleCalculatorForm(form);
+        });
+        
+        // Закрытие по ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('show')) {
+                this.hideModal('calculatorModal');
+            }
+        });
+    }
+
+    showCalculatorModal() {
+        const modal = document.getElementById('calculatorModal');
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+        
+        // Фокус на первое поле
+        setTimeout(() => {
+            const firstInput = modal.querySelector('.form-select');
+            if (firstInput) firstInput.focus();
+        }, 300);
+    }
+
+    hideModal(modalId) {
+        const modal = document.getElementById(modalId);
+        modal.classList.remove('show');
+        document.body.style.overflow = '';
+    }
+
+    handleCallbackForm(form) {
+        const formData = new FormData(form);
+        const phone = formData.get('phone') || form.querySelector('input[type="tel"]').value;
+        
+        // Показываем уведомление
+        this.showNotification('Спасибо! Мы перезвоним вам в течение 15 минут.', 'success');
+        
+        // Очищаем форму
+        form.reset();
+        
+        // Здесь можно добавить отправку данных на сервер
+        console.log('Callback request:', { phone });
+    }
+
+    handleContactForm(form) {
+        const formData = new FormData(form);
+        const data = {
+            name: formData.get('name') || form.querySelector('input[type="text"]').value,
+            phone: formData.get('phone') || form.querySelector('input[type="tel"]').value,
+            location: formData.get('location') || form.querySelectorAll('input[type="text"]')[1].value,
+            equipment: form.querySelectorAll('select')[0].value,
+            date: form.querySelectorAll('select')[1].value,
+            volume: formData.get('volume') || form.querySelector('textarea').value
+        };
+        
+        // Показываем уведомление
+        this.showNotification('Заявка отправлена! Мы свяжемся с вами в течение 30 минут.', 'success');
+        
+        // Очищаем форму
+        form.reset();
+        
+        // Здесь можно добавить отправку данных на сервер
+        console.log('Order request:', data);
+    }
+
+    handleCalculatorForm(form) {
+        const formData = new FormData(form);
+        const data = {
+            equipment: form.querySelector('select').value,
+            hours: form.querySelector('input[type="number"]').value,
+            location: form.querySelector('input[type="text"]').value,
+            description: form.querySelector('textarea').value,
+            phone: form.querySelector('input[type="tel"]').value
+        };
+        
+        // Скрываем модальное окно
+        this.hideModal('calculatorModal');
+        
+        // Показываем уведомление
+        this.showNotification('Спасибо за заявку! Мы рассчитаем стоимость и перезвоним в течение 30 минут.', 'success');
+        
+        // Очищаем форму
+        form.reset();
+        
+        // Здесь можно добавить отправку данных на сервер
+        console.log('Calculator request:', data);
+    }
+
+    showNotification(message, type = 'info') {
+        // Создаем уведомление
+        const notification = document.createElement('div');
+        notification.className = `notification notification--${type}`;
+        notification.innerHTML = `
+            <div class="notification__content">
+                <div class="notification__icon">
+                    ${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}
+                </div>
+                <span class="notification__text">${message}</span>
+                <button class="notification__close">&times;</button>
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Показываем уведомление
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 100);
+        
+        // Автоматически скрываем через 5 секунд
+        setTimeout(() => {
+            this.hideNotification(notification);
+        }, 5000);
+        
+        // Обработчик закрытия
+        notification.querySelector('.notification__close').addEventListener('click', () => {
+            this.hideNotification(notification);
+        });
+    }
+
+    hideNotification(notification) {
+        notification.classList.remove('show');
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }
+
+    initHeader() {
+        const header = document.querySelector('.header');
+        let lastScrollY = window.scrollY;
+        
+        window.addEventListener('scroll', () => {
+            const currentScrollY = window.scrollY;
             
-            return {
-                base: basePrice,
-                work: workPrice,
-                delivery: deliveryPrice,
-                total: basePrice + workPrice + deliveryPrice
+            // Добавляем класс при прокрутке
+            if (currentScrollY > 50) {
+                header.classList.add('header--scrolled');
+            } else {
+                header.classList.remove('header--scrolled');
+            }
+            
+            lastScrollY = currentScrollY;
+        });
+    }
+}
+
+// Инициализация приложения
+document.addEventListener('DOMContentLoaded', () => {
+    new SpezzApp();
+});
+
+// Дополнительные утилиты
+class Utils {
+    static formatPhone(phone) {
+        // Форматирование телефона
+        const cleaned = phone.replace(/\D/g, '');
+        const match = cleaned.match(/^(\d{1})(\d{3})(\d{3})(\d{2})(\d{2})$/);
+        if (match) {
+            return `+${match[1]} (${match[2]}) ${match[3]}-${match[4]}-${match[5]}`;
+        }
+        return phone;
+    }
+
+    static validatePhone(phone) {
+        const phoneRegex = /^(\+7|7|8)?[\s\-]?\(?[489][0-9]{2}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$/;
+        return phoneRegex.test(phone.replace(/\s/g, ''));
+    }
+
+    static validateEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+
+    static debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
             };
-        },
-        
-        showCalculator: function() {
-            const content = `
-                <form class="calculator__form" id="calculatorForm">
-                    <h3 class="calculator__title">Калькулятор стоимости</h3>
-                    
-                    <div class="calculator__row">
-                        <select name="type" class="form-select" required>
-                            <option value="">Выберите тип техники</option>
-                            <option value="excavator">Экскаватор</option>
-                            <option value="truck">Самосвал</option>
-                            <option value="crane">Кран</option>
-                            <option value="other">Другое</option>
-                        </select>
-                        
-                        <input type="number" name="hours" class="form-input" placeholder="Количество часов" min="1" required>
-                    </div>
-                    
-                    <div class="calculator__row">
-                        <input type="number" name="distance" class="form-input" placeholder="Расстояние доставки (км)" min="0" value="0">
-                        
-                        <input type="date" name="date" class="form-input" required>
-                    </div>
-                    
-                    <button type="submit" class="btn btn--primary btn--full">Рассчитать стоимость</button>
-                    
-                    <div class="calculator__result" id="calculatorResult" style="display: none;">
-                        <div class="calculator__result-title">Предварительная стоимость:</div>
-                        <div class="calculator__result-price" id="totalPrice">0 ₽</div>
-                        <div class="calculator__result-note">
-                            * Окончательная стоимость может отличаться в зависимости от условий работы
-                        </div>
-                    </div>
-                </form>
-            `;
-            
-            const modal = ModalManager.open(content, { title: 'Калькулятор стоимости аренды' });
-            
-            const form = modal.querySelector('#calculatorForm');
-            const result = modal.querySelector('#calculatorResult');
-            const totalPrice = modal.querySelector('#totalPrice');
-            
-            form.addEventListener('submit', (e) => {
-                e.preventDefault();
-                
-                const formData = new FormData(form);
-                const type = formData.get('type');
-                const hours = parseInt(formData.get('hours'));
-                const distance = parseInt(formData.get('distance')) || 0;
-                
-                const calculation = this.calculate(type, hours, distance);
-                
-                totalPrice.textContent = `${calculation.total.toLocaleString()} ₽`;
-                result.style.display = 'block';
-                
-                // Track calculation
-                if (typeof trackCalculation === 'function') {
-                    trackCalculation({ type, hours, distance, total: calculation.total });
-                }
-            });
-        }
-    };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
 
-    // Phone formatting
-    const PhoneFormatter = {
-        init: function() {
-            const phoneInputs = document.querySelectorAll('input[type="tel"]');
-            phoneInputs.forEach(input => {
-                input.addEventListener('input', this.formatInput.bind(this));
-                input.addEventListener('keydown', this.handleKeydown.bind(this));
-            });
-        },
-        
-        formatInput: function(e) {
-            const input = e.target;
-            let value = input.value.replace(/\D/g, '');
+    static throttle(func, limit) {
+        let inThrottle;
+        return function() {
+            const args = arguments;
+            const context = this;
+            if (!inThrottle) {
+                func.apply(context, args);
+                inThrottle = true;
+                setTimeout(() => inThrottle = false, limit);
+            }
+        };
+    }
+}
+
+// Автоматическое форматирование телефонных номеров
+document.addEventListener('DOMContentLoaded', () => {
+    const phoneInputs = document.querySelectorAll('input[type="tel"]');
+    
+    phoneInputs.forEach(input => {
+        input.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '');
             
             if (value.startsWith('8')) {
                 value = '7' + value.slice(1);
@@ -289,296 +371,26 @@
                 if (value.length >= 10) {
                     formatted += '-' + value.slice(9, 11);
                 }
-                input.value = formatted;
+                e.target.value = formatted;
             }
-        },
+        });
         
-        handleKeydown: function(e) {
-            // Allow backspace, delete, tab, escape, enter
-            if ([8, 9, 27, 13, 46].indexOf(e.keyCode) !== -1 ||
-                // Allow Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+        input.addEventListener('keydown', (e) => {
+            // Разрешаем: backspace, delete, tab, escape, enter
+            if ([46, 8, 9, 27, 13].indexOf(e.keyCode) !== -1 ||
+                // Разрешаем: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
                 (e.keyCode === 65 && e.ctrlKey === true) ||
                 (e.keyCode === 67 && e.ctrlKey === true) ||
                 (e.keyCode === 86 && e.ctrlKey === true) ||
-                (e.keyCode === 88 && e.ctrlKey === true)) {
+                (e.keyCode === 88 && e.ctrlKey === true) ||
+                // Разрешаем: home, end, left, right
+                (e.keyCode >= 35 && e.keyCode <= 39)) {
                 return;
             }
-            // Ensure that it is a number and stop the keypress
+            // Запрещаем все, кроме цифр
             if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
                 e.preventDefault();
             }
-        }
-    };
-
-    // Smooth scrolling for anchor links
-    const SmoothScroll = {
-        init: function() {
-            const links = document.querySelectorAll('a[href^="#"]');
-            links.forEach(link => {
-                link.addEventListener('click', this.handleClick.bind(this));
-            });
-        },
-        
-        handleClick: function(e) {
-            e.preventDefault();
-            const href = e.currentTarget.getAttribute('href');
-            const target = document.querySelector(href);
-            
-            if (target) {
-                const headerHeight = document.querySelector('.header').offsetHeight;
-                const targetPosition = target.offsetTop - headerHeight - 20;
-                
-                window.scrollTo({
-                    top: targetPosition,
-                    behavior: 'smooth'
-                });
-            }
-        }
-    };
-
-    // Back to top button
-    const BackToTop = {
-        button: null,
-        
-        init: function() {
-            this.createButton();
-            this.addEventListeners();
-        },
-        
-        createButton: function() {
-            this.button = document.createElement('button');
-            this.button.className = 'back-to-top';
-            this.button.innerHTML = '↑';
-            this.button.setAttribute('aria-label', 'Наверх');
-            document.body.appendChild(this.button);
-        },
-        
-        addEventListeners: function() {
-            window.addEventListener('scroll', utils.throttle(() => {
-                if (window.pageYOffset > 300) {
-                    this.button.classList.add('show');
-                } else {
-                    this.button.classList.remove('show');
-                }
-            }, 100));
-            
-            this.button.addEventListener('click', () => {
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            });
-        }
-    };
-
-    // FAQ functionality
-    const FAQ = {
-        init: function() {
-            const faqItems = document.querySelectorAll('.faq__item');
-            faqItems.forEach(item => {
-                const question = item.querySelector('.faq__question');
-                question.addEventListener('click', () => {
-                    const isActive = item.classList.contains('active');
-                    
-                    // Close all items
-                    faqItems.forEach(otherItem => {
-                        otherItem.classList.remove('active');
-                    });
-                    
-                    // Open clicked item if it wasn't active
-                    if (!isActive) {
-                        item.classList.add('active');
-                    }
-                });
-            });
-        }
-    };
-
-    // Global functions for external use
-    window.showNotification = function(message, type, duration) {
-        return NotificationManager.create(message, type, duration);
-    };
-
-    window.showModal = function(content, options) {
-        return ModalManager.open(content, options);
-    };
-
-    window.showCalculator = function() {
-        Calculator.showCalculator();
-    };
-
-    window.trackChoiceSelection = function(choice) {
-        console.log('Choice selected:', choice);
-        // Here you can add analytics tracking
-    };
-
-    window.trackFormSubmission = function(data) {
-        console.log('Form submitted:', data);
-        // Here you can add analytics tracking
-    };
-
-    window.trackCalculation = function(data) {
-        console.log('Calculation performed:', data);
-        // Here you can add analytics tracking
-    };
-
-    // Initialize everything when DOM is loaded
-    document.addEventListener('DOMContentLoaded', function() {
-        // Initialize core functionality
-        PhoneFormatter.init();
-        SmoothScroll.init();
-        BackToTop.init();
-        FAQ.init();
-        
-        // Button event handlers
-        const orderBtn = document.getElementById('orderBtn');
-        const calculateBtn = document.getElementById('calculateBtn');
-        
-        if (orderBtn) {
-            orderBtn.addEventListener('click', () => {
-                const contactSection = document.getElementById('contacts');
-                if (contactSection) {
-                    contactSection.scrollIntoView({ behavior: 'smooth' });
-                }
-            });
-        }
-        
-        if (calculateBtn) {
-            calculateBtn.addEventListener('click', () => {
-                Calculator.showCalculator();
-            });
-        }
-        
-        // Add loading states to forms
-        const forms = document.querySelectorAll('form');
-        forms.forEach(form => {
-            form.addEventListener('submit', function(e) {
-                const submitBtn = form.querySelector('button[type="submit"]');
-                if (submitBtn && !submitBtn.disabled) {
-                    submitBtn.classList.add('loading');
-                    submitBtn.disabled = true;
-                    
-                    // Remove loading state after form processing
-                    setTimeout(() => {
-                        submitBtn.classList.remove('loading');
-                        submitBtn.disabled = false;
-                    }, 2000);
-                }
-            });
-        });
-        
-        // Initialize lazy loading for images
-        if ('IntersectionObserver' in window) {
-            const imageObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const img = entry.target;
-                        if (img.dataset.src) {
-                            img.src = img.dataset.src;
-                            img.classList.remove('lazy');
-                            observer.unobserve(img);
-                        }
-                    }
-                });
-            });
-            
-            const lazyImages = document.querySelectorAll('img[data-src]');
-            lazyImages.forEach(img => imageObserver.observe(img));
-        }
-        
-        // Performance optimization: preload critical resources
-        const preloadLinks = [
-            { href: '/dist/css/main.css', as: 'style' },
-            { href: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap', as: 'style' }
-        ];
-        
-        preloadLinks.forEach(link => {
-            const linkElement = document.createElement('link');
-            linkElement.rel = 'preload';
-            linkElement.href = link.href;
-            linkElement.as = link.as;
-            document.head.appendChild(linkElement);
-        });
-        
-        // Add error handling for images
-        const images = document.querySelectorAll('img');
-        images.forEach(img => {
-            img.addEventListener('error', function() {
-                this.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect fill="%23f0f0f0" width="400" height="300"/><text x="200" y="150" text-anchor="middle" fill="%23999" font-size="16" font-family="Arial">Изображение недоступно</text></svg>';
-            });
-        });
-        
-        // Initialize service worker for offline functionality
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(registration => {
-                        console.log('SW registered: ', registration);
-                    })
-                    .catch(registrationError => {
-                        console.log('SW registration failed: ', registrationError);
-                    });
-            });
-        }
-        
-        // Add keyboard navigation support
-        document.addEventListener('keydown', function(e) {
-            // ESC key closes modals
-            if (e.key === 'Escape') {
-                ModalManager.close();
-            }
-            
-            // Enter key on choice cards
-            if (e.key === 'Enter' && e.target.classList.contains('choice-card')) {
-                e.target.click();
-            }
-        });
-        
-        // Add focus management for accessibility
-        const focusableElements = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
-        
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Tab') {
-                const modal = document.querySelector('.modal.show');
-                if (modal) {
-                    const focusableContent = modal.querySelectorAll(focusableElements);
-                    const firstFocusableElement = focusableContent[0];
-                    const lastFocusableElement = focusableContent[focusableContent.length - 1];
-                    
-                    if (e.shiftKey) {
-                        if (document.activeElement === firstFocusableElement) {
-                            lastFocusableElement.focus();
-                            e.preventDefault();
-                        }
-                    } else {
-                        if (document.activeElement === lastFocusableElement) {
-                            firstFocusableElement.focus();
-                            e.preventDefault();
-                        }
-                    }
-                }
-            }
         });
     });
-
-    // Handle page visibility changes
-    document.addEventListener('visibilitychange', function() {
-        if (document.hidden) {
-            // Page is hidden, pause animations
-            document.body.classList.add('page-hidden');
-        } else {
-            // Page is visible, resume animations
-            document.body.classList.remove('page-hidden');
-        }
-    });
-
-    // Handle online/offline status
-    window.addEventListener('online', function() {
-        NotificationManager.create('Соединение восстановлено', 'success', 3000);
-    });
-
-    window.addEventListener('offline', function() {
-        NotificationManager.create('Нет соединения с интернетом', 'warning', 5000);
-    });
-
-})();
+});

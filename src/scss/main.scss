@@ -18,12 +18,12 @@ body {
   font-family: $font-family;
   font-size: $font-size-base;
   line-height: $line-height-base;
-  color: $dark-color;
-  background-color: $white-color;
+  color: $white-color;
+  background: linear-gradient(135deg, $asphalt-dark 0%, $asphalt-medium 100%);
   overflow-x: hidden;
 }
 
-// Container
+// Container - ВАЖНО! Возвращаем контейнер
 .container {
   width: 100%;
   padding-right: 15px;
@@ -52,11 +52,12 @@ body {
   }
 }
 
-// Typography
+// Typography (продолжение)
 h1, h2, h3, h4, h5, h6 {
   font-weight: $font-weight-bold;
   line-height: $line-height-sm;
   margin-bottom: map.get($spacers, 3);
+  color: $white-color;
 }
 
 h1 {
@@ -81,6 +82,7 @@ h3 {
 
 p {
   margin-bottom: map.get($spacers, 3);
+  color: rgba($white-color, 0.9);
 }
 
 a {
@@ -89,7 +91,7 @@ a {
   transition: $transition-base;
   
   &:hover {
-    color: color.adjust($primary-color, $lightness: -10%);
+    color: $accent-color;
   }
 }
 
@@ -147,6 +149,7 @@ a {
   font-size: $font-size-xxl;
   font-weight: $font-weight-bold;
   margin-bottom: map.get($spacers, 5);
+  color: $white-color;
   
   @include media-breakpoint-down(md) {
     font-size: $font-size-xl;
@@ -160,9 +163,9 @@ a {
   top: 0;
   left: 0;
   right: 0;
-  background: rgba($white-color, 0.95);
+  background: rgba($asphalt-dark, 0.95);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba($gray-color, 0.1);
+  border-bottom: 1px solid rgba($primary-color, 0.2);
   z-index: $z-index-fixed;
   transition: $transition-base;
   
@@ -195,54 +198,15 @@ a {
   &__text {
     font-size: 24px;
     font-weight: $font-weight-bold;
-    color: $secondary-color;
+    color: $primary-color;
     line-height: 1;
   }
   
   &__subtitle {
     font-size: 12px;
-    color: $gray-color;
+    color: rgba($white-color, 0.7);
     text-transform: uppercase;
     letter-spacing: 1px;
-  }
-}
-
-// Navigation
-.nav {
-  @include flex-center;
-  gap: 30px;
-  
-  @include media-breakpoint-down(lg) {
-    gap: 20px;
-  }
-  
-  @include media-breakpoint-down(md) {
-    order: 2;
-    width: 100%;
-    justify-content: center;
-  }
-  
-  &__link {
-    font-weight: $font-weight-medium;
-    color: $dark-color;
-    transition: $transition-base;
-    
-    &:hover {
-      color: $primary-color;
-    }
-    
-    &--accent {
-      background: $primary-gradient;
-      color: $white-color;
-      padding: 8px 16px;
-      border-radius: $border-radius;
-      
-      &:hover {
-        color: $white-color;
-        transform: translateY(-2px);
-        box-shadow: $shadow;
-      }
-    }
   }
 }
 
@@ -250,7 +214,7 @@ a {
 .phone {
   font-size: $font-size-lg;
   font-weight: $font-weight-semibold;
-  color: $secondary-color;
+  color: $white-color;
   
   &:hover {
     color: $primary-color;
@@ -270,26 +234,47 @@ a {
   transition: $transition-base;
   
   &--telegram {
-    background: #0088cc;
+    background: linear-gradient(135deg, #0088cc 0%, #005999 100%);
     
-    &::before {
-      content: "✈️";
-      font-size: 18px;
+    svg {
+      width: 20px;
+      height: 20px;
+      fill: $white-color;
     }
   }
   
   &--whatsapp {
-    background: #25d366;
+    background: linear-gradient(135deg, #25d366 0%, #1da851 100%);
     
-    &::before {
-      content: "💬";
-      font-size: 18px;
+    svg {
+      width: 20px;
+      height: 20px;
+      fill: $white-color;
     }
   }
   
   &:hover {
     transform: scale(1.1);
     box-shadow: $shadow;
+  }
+}
+
+.profile-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba($primary-color, 0.2);
+  @include flex-center;
+  cursor: pointer;
+  transition: $transition-base;
+  
+  svg {
+    fill: $primary-color;
+  }
+  
+  &:hover {
+    background: rgba($primary-color, 0.3);
+    transform: scale(1.1);
   }
 }
 
@@ -311,8 +296,8 @@ a {
     bottom: 0;
     opacity: 0.1;
     background-image: 
-      radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+      radial-gradient(circle at 20% 80%, rgba($primary-color, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba($primary-color, 0.1) 0%, transparent 50%);
     animation: float 6s ease-in-out infinite;
   }
   
@@ -350,32 +335,37 @@ a {
   }
   
   &__title-accent {
-    background: linear-gradient(45deg, $accent-color, #FFE066);
+    background: linear-gradient(45deg, $primary-color, $accent-color);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     display: block;
   }
   
-  &__subtitle {
-    font-size: $font-size-lg;
+  &__text-blocks {
+    margin-bottom: map.get($spacers, 4);
+  }
+  
+  &__text-block {
+    font-size: $font-size-base;
     line-height: $line-height-lg;
-    margin-bottom: map.get($spacers, 5);
+    margin-bottom: map.get($spacers, 2);
     opacity: 0.9;
     
     @include media-breakpoint-down(md) {
-      font-size: $font-size-base;
+      font-size: $font-size-sm;
     }
   }
   
-  &__benefits {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+  &__priority-text {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-medium;
+    color: $accent-color;
     margin-bottom: map.get($spacers, 5);
+    text-align: center;
     
     @include media-breakpoint-down(md) {
-      justify-content: center;
+      font-size: $font-size-base;
     }
   }
   
@@ -405,230 +395,135 @@ a {
     border-radius: $border-radius-xl;
     overflow: hidden;
     box-shadow: $shadow-xl;
+    
+    @include media-breakpoint-down(md) {
+      height: 300px;
+    }
+    
+    @include media-breakpoint-down(sm) {
+      height: 250px;
+    }
   }
   
   &__image {
-    position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 100%;
-    background-size: cover;
-    background-position: center;
-    opacity: 0;
-    transition: opacity 1s ease-in-out;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.3s ease;
     
-    &--1 {
-      background: linear-gradient(45deg, $primary-color, $secondary-color);
-      @include flex-center;
-      font-size: 24px;
-      
-      &::after {
-        content: "🚜 Экскаватор";
-      }
+    &:hover {
+      transform: scale(1.05);
     }
-    
-    &--2 {
-      background: linear-gradient(45deg, $accent-color, $primary-color);
-      @include flex-center;
-      font-size: 24px;
-      color: $white-color;
-      
-      &::after {
-        content: "🚛 Самосвал";
-      }
-    }
-    
-    &--3 {
-      background: linear-gradient(45deg, $secondary-color, $accent-color);
-      @include flex-center;
-      font-size: 24px;
-      color: $dark-color;
-      
-      &::after {
-        content: "🏗️ Кран";
-      }
-    }
-    
-    &.active {
-      opacity: 1;
-    }
+  }
+  
+  &__question-mark {
+    @include flex-center;
+    animation: float 6s ease-in-out infinite;
   }
 }
 
-// Benefits
-.benefit {
-  @include flex-center;
-  gap: 10px;
-  background: rgba($white-color, 0.1);
-  padding: 12px 20px;
-  border-radius: $border-radius-lg;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba($white-color, 0.2);
+// Equipment Icons Section
+.equipment-icons {
+  padding: map.get($spacers, 6) 0;
+  background: $hero-gradient; // Такой же фон как у hero секции
   
-  &__icon {
-    font-size: 20px;
-  }
-  
-  &__text {
-    font-weight: $font-weight-medium;
-    white-space: nowrap;
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); // Фиксированно 5 колонок
+    gap: 20px;
+    max-width: 1200px; // Увеличиваем максимальную ширину
+    margin: 0 auto;
+    
+    @include media-breakpoint-down(lg) {
+      grid-template-columns: repeat(5, 1fr); // Сохраняем 5 колонок на больших экранах
+      gap: 15px;
+    }
+    
+    @include media-breakpoint-down(md) {
+      grid-template-columns: repeat(3, 1fr); // На средних экранах 3 колонки
+      gap: 15px;
+    }
     
     @include media-breakpoint-down(sm) {
-      font-size: $font-size-sm;
+      grid-template-columns: repeat(2, 1fr); // На маленьких экранах 2 колонки
+      gap: 15px;
     }
   }
 }
 
-// Choice section
-.choice-section {
-  padding: map.get($spacers, 8) 0;
-  background: $light-color;
-  
-  &__title {
-    text-align: center;
-    font-size: $font-size-xxl;
-    margin-bottom: map.get($spacers, 3);
-    color: $secondary-color;
-  }
-  
-  &__subtitle {
-    text-align: center;
-    font-size: $font-size-lg;
-    color: $gray-color;
-    margin-bottom: map.get($spacers, 5);
-  }
-}
-
-.choice-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 30px;
-}
-
-.choice-card {
-  background: $white-color;
-  padding: 40px 30px;
-  border-radius: $border-radius-xl;
+.equipment-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; // Центрируем содержимое по вертикали
   text-align: center;
+  padding: 25px 20px; // Увеличиваем отступы
+  background: rgba($white-color, 0.9);
+  border-radius: $border-radius-lg;
   cursor: pointer;
-  border: 2px solid transparent;
   transition: $transition-base;
+  border: 2px solid transparent;
+  aspect-ratio: 1; // Делаем карточки квадратными
+  min-height: 180px; // Увеличиваем минимальную высоту
   
   &:hover {
     border-color: $primary-color;
-    transform: translateY(-5px);
-    box-shadow: $shadow-xl;
+    transform: translateY(-3px);
+    box-shadow: $shadow-lg;
+    background: $white-color;
   }
   
-  &__icon {
-    font-size: 48px;
-    margin-bottom: map.get($spacers, 3);
+  &__image {
+    width: 80px; // Увеличиваем размер изображения
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: 15px; // Увеличиваем отступ
+    filter: grayscale(100%);
+    transition: $transition-base;
+    
+    @include media-breakpoint-down(lg) {
+      width: 70px;
+      height: 70px;
+    }
+    
+    @include media-breakpoint-down(md) {
+      width: 60px;
+      height: 60px;
+    }
+  }
+  
+  &:hover &__image {
+    filter: grayscale(0%);
+    transform: scale(1.1);
+  }
+  
+  &__label {
     display: block;
-  }
-  
-  &__title {
-    font-size: $font-size-xl;
-    color: $secondary-color;
-    margin-bottom: map.get($spacers, 2);
-  }
-  
-  &__text {
-    color: $gray-color;
-    line-height: $line-height-lg;
-  }
-}
-
-// Services section (продолжение)
-.services-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 30px;
-}
-
-.service-card {
-  background: linear-gradient(135deg, $white-color 0%, $light-color 100%);
-  padding: 40px 30px;
-  border-radius: $border-radius-xl;
-  text-align: center;
-  border: 1px solid rgba($gray-color, 0.1);
-  transition: $transition-base;
-  
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: $shadow-xl;
-  }
-  
-  &__icon {
-    font-size: 48px;
-    margin-bottom: map.get($spacers, 3);
-    display: block;
-  }
-  
-  &__title {
-    font-size: $font-size-xl;
-    color: $secondary-color;
-    margin-bottom: map.get($spacers, 2);
-  }
-  
-  &__text {
-    color: $gray-color;
+    font-size: $font-size-lg; // Увеличиваем размер шрифта
     font-weight: $font-weight-medium;
-  }
-}
-
-// Advantages section
-.advantages {
-  padding: map.get($spacers, 8) 0;
-  background: $secondary-color;
-  color: $white-color;
-}
-
-.advantages-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 40px;
-}
-
-.advantage-card {
-  position: relative;
-  padding: 40px 30px;
-  background: rgba($white-color, 0.05);
-  border-radius: $border-radius-xl;
-  border: 1px solid rgba($white-color, 0.1);
-  backdrop-filter: blur(10px);
-  
-  &__number {
-    position: absolute;
-    top: -15px;
-    left: 30px;
-    background: $primary-gradient;
-    color: $white-color;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    @include flex-center;
-    font-size: $font-size-xl;
-    font-weight: $font-weight-bold;
-    box-shadow: $shadow;
+    color: $asphalt-dark;
+    transition: $transition-base;
+    line-height: 1.2;
+    
+    @include media-breakpoint-down(lg) {
+      font-size: $font-size-base;
+    }
+    
+    @include media-breakpoint-down(md) {
+      font-size: $font-size-sm;
+    }
   }
   
-  &__title {
-    font-size: $font-size-xl;
-    margin-bottom: map.get($spacers, 3);
-    margin-top: map.get($spacers, 2);
-  }
-  
-  &__text {
-    color: rgba($white-color, 0.9);
-    line-height: $line-height-lg;
+  &:hover &__label {
+    color: $primary-color;
   }
 }
 
 // Map section
 .map-section {
   padding: map.get($spacers, 8) 0;
-  background: $light-color;
+  background: rgba($asphalt-medium, 0.5);
 }
 
 .map-content {
@@ -643,50 +538,6 @@ a {
   }
 }
 
-.map-info {
-  &__title {
-    font-size: $font-size-xxl;
-    color: $secondary-color;
-    margin-bottom: map.get($spacers, 3);
-  }
-  
-  &__text {
-    font-size: $font-size-lg;
-    color: $gray-color;
-    line-height: $line-height-lg;
-    margin-bottom: map.get($spacers, 4);
-  }
-}
-
-.map-stats {
-  display: flex;
-  gap: 30px;
-  
-  @include media-breakpoint-down(sm) {
-    flex-direction: column;
-    gap: 20px;
-  }
-}
-
-.map-stat {
-  text-align: center;
-  
-  &__number {
-    display: block;
-    font-size: $font-size-xxl;
-    font-weight: $font-weight-bold;
-    color: $primary-color;
-    line-height: 1;
-  }
-  
-  &__text {
-    font-size: $font-size-sm;
-    color: $gray-color;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-}
-
 .map-container {
   position: relative;
   height: 400px;
@@ -695,23 +546,39 @@ a {
   box-shadow: $shadow-lg;
 }
 
-.map {
+.crimea-map {
+  position: relative;
   width: 100%;
   height: 100%;
-  background: linear-gradient(45deg, $secondary-color, $primary-color);
+  background: rgba($asphalt-light, 0.8);
   @include flex-center;
-  color: $white-color;
-  font-size: $font-size-xl;
   
-  &::before {
-    content: "🗺️ Интерактивная карта";
+  svg {
+    width: 100%;
+    height: 100%;
+    color: $primary-color;
+  }
+}
+
+.map-info {
+  &__title {
+    font-size: $font-size-xxl;
+    color: $white-color;
+    margin-bottom: map.get($spacers, 3);
+  }
+  
+  &__text {
+    font-size: $font-size-lg;
+    color: rgba($white-color, 0.9);
+    line-height: $line-height-lg;
+    margin-bottom: map.get($spacers, 4);
   }
 }
 
 // Contact section
 .contact-section {
   padding: map.get($spacers, 8) 0;
-  background: $white-color;
+  background: rgba($asphalt-dark, 0.9);
 }
 
 .contact-content {
@@ -729,58 +596,46 @@ a {
 .contact-info {
   &__title {
     font-size: $font-size-xxl;
-    color: $secondary-color;
+    color: $white-color;
     margin-bottom: map.get($spacers, 3);
   }
   
   &__text {
     font-size: $font-size-lg;
-    color: $gray-color;
+    color: rgba($white-color, 0.9);
     line-height: $line-height-lg;
     margin-bottom: map.get($spacers, 4);
   }
 }
 
-.contact-methods {
+.callback-form {
   display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.contact-method {
-  @include flex-center;
-  justify-content: flex-start;
   gap: 15px;
-  padding: 20px;
-  background: $light-color;
-  border-radius: $border-radius-lg;
-  transition: $transition-base;
+  margin-bottom: map.get($spacers, 4);
   
-  &:hover {
-    background: $primary-color;
-    color: $white-color;
-    transform: translateX(10px);
+  @include media-breakpoint-down(sm) {
+    flex-direction: column;
   }
   
-  &__icon {
-    font-size: 24px;
+  .form-input {
+    flex: 1;
   }
   
-  &__text {
-    font-size: $font-size-lg;
-    font-weight: $font-weight-medium;
+  .btn {
+    white-space: nowrap;
   }
 }
 
 // Contact form
 .contact-form {
-  background: $light-color;
+  background: rgba($asphalt-medium, 0.8);
   padding: 40px;
   border-radius: $border-radius-xl;
+  border: 1px solid rgba($primary-color, 0.2);
   
   &__title {
     font-size: $font-size-xl;
-    color: $secondary-color;
+    color: $white-color;
     margin-bottom: map.get($spacers, 4);
     text-align: center;
   }
@@ -791,17 +646,24 @@ a {
 .form-textarea {
   width: 100%;
   padding: 15px;
-  border: 2px solid rgba($gray-color, 0.2);
+  border: 2px solid rgba($primary-color, 0.3);
   border-radius: $border-radius;
   font-size: $font-size-base;
   font-family: $font-family;
   margin-bottom: map.get($spacers, 3);
   transition: $transition-base;
+  background: rgba($asphalt-light, 0.8);
+  color: $white-color;
+  
+  &::placeholder {
+    color: rgba($white-color, 0.6);
+  }
   
   &:focus {
     outline: none;
     border-color: $primary-color;
-    box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+    box-shadow: 0 0 0 3px rgba($primary-color, 0.2);
+    background: rgba($asphalt-light, 1);
   }
 }
 
@@ -812,7 +674,7 @@ a {
 
 .form-select {
   cursor: pointer;
-  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23666" stroke-width="2"><polyline points="6,9 12,15 18,9"></polyline></svg>');
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23FF6B35" stroke-width="2"><polyline points="6,9 12,15 18,9"></polyline></svg>');
   background-repeat: no-repeat;
   background-position: right 15px center;
   background-size: 16px;
@@ -820,104 +682,105 @@ a {
 }
 
 // Footer
-.footer {
-  background: $dark-color;
+.footer-section {
+  background: $asphalt-dark;
   color: $white-color;
   padding: map.get($spacers, 6) 0 map.get($spacers, 4);
+  border-top: 1px solid rgba($primary-color, 0.2);
+}
+
+.footer-content {
+  @include flex-between;
+  margin-bottom: map.get($spacers, 4);
   
-  &__content {
-    @include flex-between;
-    margin-bottom: map.get($spacers, 4);
-    
-    @include media-breakpoint-down(md) {
-      flex-direction: column;
-      gap: 30px;
-      text-align: center;
-    }
-  }
-  
-  &__main {
-    flex: 1;
-  }
-  
-  &__description {
-    color: rgba($white-color, 0.7);
-    margin-top: map.get($spacers, 3);
-    max-width: 400px;
-    line-height: $line-height-lg;
-  }
-  
-  &__contacts {
-    @include flex-column;
-    align-items: flex-end;
-    gap: 20px;
-    
-    @include media-breakpoint-down(md) {
-      align-items: center;
-    }
-  }
-  
-  &__phone {
-    font-size: $font-size-xl;
-    font-weight: $font-weight-semibold;
-    color: $white-color;
-    
-    &:hover {
-      color: $primary-color;
-    }
-  }
-  
-  &__messengers {
-    @include flex-center;
-    gap: 15px;
-  }
-  
-  &__bottom {
-    @include flex-between;
-    padding-top: map.get($spacers, 4);
-    border-top: 1px solid rgba($white-color, 0.1);
-    
-    @include media-breakpoint-down(md) {
-      flex-direction: column;
-      gap: 20px;
-      text-align: center;
-    }
-  }
-  
-  &__copyright {
-    color: rgba($white-color, 0.6);
-    font-size: $font-size-sm;
-  }
-  
-  &__links {
-    @include flex-center;
+  @include media-breakpoint-down(md) {
+    flex-direction: column;
     gap: 30px;
-    
-    @include media-breakpoint-down(sm) {
-      flex-direction: column;
-      gap: 15px;
-    }
-  }
-  
-  &__link {
-    color: rgba($white-color, 0.7);
-    font-size: $font-size-sm;
-    transition: $transition-base;
-    
-    &:hover {
-      color: $primary-color;
-    }
+    text-align: center;
   }
 }
 
-// Modal
+.footer-main {
+  flex: 1;
+}
+
+.footer-description {
+  color: rgba($white-color, 0.7);
+  margin-top: map.get($spacers, 3);
+  max-width: 400px;
+  line-height: $line-height-lg;
+}
+
+.footer-contacts {
+  @include flex-column;
+  align-items: flex-end;
+  gap: 20px;
+  
+  @include media-breakpoint-down(md) {
+    align-items: center;
+  }
+}
+
+.footer-phone {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  color: $white-color;
+  
+  &:hover {
+    color: $primary-color;
+  }
+}
+
+.footer-messengers {
+  @include flex-center;
+  gap: 15px;
+}
+
+.footer-bottom {
+  @include flex-between;
+  padding-top: map.get($spacers, 4);
+  border-top: 1px solid rgba($white-color, 0.1);
+  
+  @include media-breakpoint-down(md) {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+  }
+}
+
+.footer-copyright {
+  color: rgba($white-color, 0.6);
+  font-size: $font-size-sm;
+}
+
+.footer-links {
+  @include flex-center;
+  gap: 30px;
+  
+  @include media-breakpoint-down(sm) {
+    flex-direction: column;
+    gap: 15px;
+  }
+}
+
+.footer-link {
+  color: rgba($white-color, 0.7);
+  font-size: $font-size-sm;
+  transition: $transition-base;
+  
+  &:hover {
+    color: $primary-color;
+  }
+}
+
+// Modal styles
 .modal {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba($dark-color, 0.8);
+  background: rgba($asphalt-dark, 0.9);
   @include flex-center;
   z-index: $z-index-modal;
   opacity: 0;
@@ -930,9 +793,10 @@ a {
   }
   
   &__content {
-    background: $white-color;
+    background: $asphalt-medium;
+    border: 2px solid $primary-color;
     border-radius: $border-radius-xl;
-    max-width: 600px;
+    max-width: 500px;
     width: 90%;
     max-height: 90vh;
     overflow-y: auto;
@@ -947,13 +811,13 @@ a {
   &__header {
     @include flex-between;
     padding: 30px 30px 0;
-    border-bottom: 1px solid rgba($gray-color, 0.1);
+    border-bottom: 1px solid rgba($primary-color, 0.2);
     margin-bottom: 30px;
   }
   
   &__title {
     font-size: $font-size-xl;
-    color: $secondary-color;
+    color: $white-color;
     margin: 0;
   }
   
@@ -962,7 +826,7 @@ a {
     border: none;
     font-size: 24px;
     cursor: pointer;
-    color: $gray-color;
+    color: rgba($white-color, 0.7);
     width: 30px;
     height: 30px;
     @include flex-center;
@@ -970,8 +834,8 @@ a {
     transition: $transition-base;
     
     &:hover {
-      background: rgba($gray-color, 0.1);
-      color: $dark-color;
+      background: rgba($primary-color, 0.2);
+      color: $primary-color;
     }
   }
   
@@ -980,12 +844,8 @@ a {
   }
 }
 
-// Calculator
-.calculator {
-  &__form {
-    margin-bottom: 30px;
-  }
-  
+// Calculator form
+.calculator-form {
   &__row {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -999,29 +859,17 @@ a {
   
   &__result {
     text-align: center;
-    padding: 30px;
-    background: $light-color;
-    border-radius: $border-radius-lg;
+    padding: 20px;
+    background: rgba($primary-color, 0.1);
     border: 2px solid $primary-color;
+    border-radius: $border-radius-lg;
+    margin-top: 20px;
   }
   
-  &__result-title {
+  &__result-text {
     font-size: $font-size-lg;
-    color: $secondary-color;
-    margin-bottom: 15px;
-  }
-  
-  &__result-price {
-    font-size: 36px;
-    font-weight: $font-weight-bold;
-    color: $primary-color;
+    color: $white-color;
     margin-bottom: 10px;
-  }
-  
-  &__result-note {
-    font-size: $font-size-sm;
-    color: $gray-color;
-    font-style: italic;
   }
 }
 
@@ -1102,7 +950,7 @@ a {
   height: 100%;
 }
 
-// Responsive utilities (продолжение)
+// Responsive utilities
 @include media-breakpoint-down(md) {
   .d-md-none {
     display: none;
@@ -1115,59 +963,13 @@ a {
   }
 }
 
-// Scroll animations
-.animate-on-scroll {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: all 0.6s ease-out;
-  
-  &.animated {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-// Loading states
-.loading {
-  position: relative;
-  pointer-events: none;
-  
-  &::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 20px;
-    height: 20px;
-    margin: -10px 0 0 -10px;
-    border: 2px solid transparent;
-    border-top: 2px solid $primary-color;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-  }
-}
-
-// Interactive elements
-.interactive-element {
-  cursor: pointer;
-  transition: $transition-base;
-  
-  &:hover {
-    transform: scale(1.02);
-  }
-  
-  &:active {
-    transform: scale(0.98);
-  }
-}
-
 // Custom scrollbar
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: $light-color;
+  background: $asphalt-medium;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -1175,19 +977,19 @@ a {
   border-radius: 4px;
   
   &:hover {
-    background: color.adjust($primary-color, $lightness: -10%);
+    background: $accent-color;
   }
 }
 
 // Selection
 ::selection {
-  background: rgba($primary-color, 0.2);
-  color: $dark-color;
+  background: rgba($primary-color, 0.3);
+  color: $white-color;
 }
 
 ::-moz-selection {
-  background: rgba($primary-color, 0.2);
-  color: $dark-color;
+  background: rgba($primary-color, 0.3);
+  color: $white-color;
 }
 
 // Focus styles
@@ -1205,7 +1007,7 @@ button:focus,
 // Print styles
 @media print {
   .header,
-  .footer,
+  .footer-section,
   .btn,
   .contact-form,
   .modal {
@@ -1215,6 +1017,8 @@ button:focus,
   body {
     font-size: 12pt;
     line-height: 1.4;
+    background: white !important;
+    color: black !important;
   }
   
   .hero {
@@ -1233,28 +1037,13 @@ button:focus,
     &__title {
       font-size: 28px;
     }
-    
-    &__benefits {
-      flex-direction: column;
-      align-items: center;
+  }
+  
+  .services-advantages {
+    &__grid {
+      grid-template-columns: 1fr;
+      gap: 30px;
     }
-  }
-  
-  .benefit {
-    &__text {
-      white-space: normal;
-      text-align: center;
-    }
-  }
-  
-  .choice-grid,
-  .services-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .advantages-grid {
-    grid-template-columns: 1fr;
-    gap: 30px;
   }
   
   .map-content,
@@ -1279,33 +1068,22 @@ button:focus,
       padding-right: 20px;
     }
   }
-  
-  .calculator {
-    &__row {
-      grid-template-columns: 1fr;
-      gap: 10px;
-    }
-    
-    &__result-price {
-      font-size: 28px;
-    }
-  }
 }
 
 // High contrast mode
 @media (prefers-contrast: high) {
   .hero {
-    background: $dark-color;
+    background: $asphalt-dark;
   }
   
   .btn--secondary {
     border-width: 3px;
   }
   
-  .choice-card,
-  .service-card {
+  .equipment-icon,
+  .service-advantage-card {
     border-width: 2px;
-    border-color: $dark-color;
+    border-color: $primary-color;
   }
 }
 
@@ -1322,9 +1100,4 @@ button:focus,
   .hero__bg-animation {
     animation: none;
   }
-}
-
-// Dark mode support (если потребуется в будущем)
-@media (prefers-color-scheme: dark) {
-  // Можно добавить темную тему
 }
