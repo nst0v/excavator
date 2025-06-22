@@ -300,10 +300,10 @@ a {
   }
 }
 
-// Hero section - новая структура с тремя колонками
+// Hero section - обновленная структура с тремя колонками
 .hero {
   position: relative;
-  min-height: 100vh;
+  min-height: 90vh;
   background: none;
   color: $white-color;
   @include flex-center;
@@ -312,7 +312,7 @@ a {
   
   &__content {
     display: grid;
-    grid-template-columns: 1fr 400px 1fr; // Левый текст, картинка по центру, правый текст
+    grid-template-columns: 1fr 400px 1fr;
     gap: 40px;
     align-items: center;
     width: 100%;
@@ -325,7 +325,7 @@ a {
     
     @include media-breakpoint-down(lg) {
       grid-template-columns: 1fr;
-      gap: 40px;
+      gap: 30px;
       text-align: center;
     }
   }
@@ -334,12 +334,13 @@ a {
     font-size: $font-size-hero;
     font-weight: $font-weight-bold;
     line-height: 1.1;
-    margin-bottom: map.get($spacers, 4);
+    margin-bottom: map.get($spacers, 3);
     text-align: center;
-    grid-column: 1 / -1; // Заголовок на всю ширину
+    grid-column: 1 / -1;
     
     @include media-breakpoint-down(lg) {
       font-size: 40px;
+      margin-bottom: map.get($spacers, 2);
     }
     
     @include media-breakpoint-down(md) {
@@ -355,29 +356,63 @@ a {
   // Левый блок текста
   &__text-left {
     animation: slideUp 0.8s ease-out 0.2s both;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    padding-right: 20px;
     
     @include media-breakpoint-down(lg) {
       order: 2;
+      padding-right: 0;
+      gap: 15px;
     }
   }
   
   // Правый блок текста
   &__text-right {
     animation: slideUp 0.8s ease-out 0.4s both;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    padding-left: 20px;
     
     @include media-breakpoint-down(lg) {
       order: 3;
+      padding-left: 0;
+      gap: 15px;
     }
   }
   
   &__text-block {
-    font-size: $font-size-base;
+    font-size: $font-size-lg;
     line-height: $line-height-lg;
-    margin-bottom: map.get($spacers, 3);
-    opacity: 0.9;
+    margin-bottom: 0;
+    opacity: 0.95;
+    padding: 15px;
+    background: rgba($asphalt-medium, 0.3);
+    border-radius: $border-radius-lg;
+    border-left: 4px solid $primary-color;
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
     
     @include media-breakpoint-down(md) {
-      font-size: $font-size-sm;
+      font-size: $font-size-base;
+      padding: 12px;
+    }
+    
+    @include media-breakpoint-down(lg) {
+      text-align: left;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    // Эффект при наведении
+    &:hover {
+      background: rgba($asphalt-medium, 0.5);
+      transform: translateX(5px);
+      border-left-color: $accent-color;
     }
     
     // Анимация появления для каждого блока
@@ -385,10 +420,31 @@ a {
     transform: translateY(20px);
     animation: slideUpStagger 0.6s ease-out forwards;
     
-    &:nth-child(1) { animation-delay: 0.2s; }
-    &:nth-child(2) { animation-delay: 0.4s; }
-    &:nth-child(3) { animation-delay: 0.6s; }
-    &:nth-child(4) { animation-delay: 0.8s; }
+    &:nth-child(1) { animation-delay: 0.3s; }
+    &:nth-child(2) { animation-delay: 0.5s; }
+    &:nth-child(3) { animation-delay: 0.7s; }
+    &:nth-child(4) { animation-delay: 0.9s; }
+  }
+  
+  // Специальные стили для правого блока
+  &__text-right &__text-block {
+    border-left: none;
+    border-right: 4px solid $primary-color;
+    
+    &:hover {
+      transform: translateX(-5px);
+      border-right-color: $accent-color;
+    }
+    
+    @include media-breakpoint-down(lg) {
+      border-right: none;
+      border-left: 4px solid $primary-color;
+      
+      &:hover {
+        transform: translateX(5px);
+        border-left-color: $accent-color;
+      }
+    }
   }
   
   // Центральная картинка
@@ -405,65 +461,55 @@ a {
   &__image-container {
     position: relative;
     width: 100%;
-    height: 500px;
-    border-radius: $border-radius-xl;
-    overflow: hidden;
-    box-shadow: $shadow-xl;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     
     @include media-breakpoint-down(xl) {
-      height: 450px;
+      height: 350px;
     }
     
     @include media-breakpoint-down(lg) {
-      height: 400px;
+      height: 320px;
       max-width: 500px;
       margin: 0 auto;
     }
     
     @include media-breakpoint-down(md) {
-      height: 300px;
+      height: 280px;
     }
     
     @include media-breakpoint-down(sm) {
-      height: 250px;
+      height: 220px;
     }
   }
   
   &__image {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     object-position: center;
     transition: transform 0.3s ease;
+    filter: none;
     
     &:hover {
       transform: scale(1.05);
     }
   }
   
-  // Приоритетный текст и кнопки
-  &__priority-text {
-    font-size: $font-size-lg;
-    font-weight: $font-weight-medium;
-    color: $accent-color;
-    margin-bottom: map.get($spacers, 4);
-    text-align: center;
-    grid-column: 1 / -1; // На всю ширину
-    
-    @include media-breakpoint-down(md) {
-      font-size: $font-size-base;
-    }
-  }
-  
+  // Кнопки действий
   &__actions {
     display: flex;
-    gap: 20px;
+    gap: 25px;
     justify-content: center;
-    grid-column: 1 / -1; // На всю ширину
+    grid-column: 1 / -1;
+    margin-top: map.get($spacers, 2);
     
     @include media-breakpoint-down(md) {
       flex-direction: column;
       align-items: center;
+      gap: 15px;
     }
   }
 }
@@ -471,7 +517,7 @@ a {
 // Equipment Icons Section
 .equipment-icons {
   position: relative;
-  padding: map.get($spacers, 6) 0;
+  padding: map.get($spacers, 4) 0;
   background: none;
   z-index: 1;
   
