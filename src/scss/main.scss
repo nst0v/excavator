@@ -514,103 +514,223 @@ a {
   }
 }
 
-// Equipment Icons Section
+// Equipment Icons Section - версия БЕЗ скачков
 .equipment-icons {
   position: relative;
   padding: map.get($spacers, 4) 0;
   background: none;
   z-index: 1;
+  overflow: hidden;
   
-  &__grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
+  &__carousel {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    
+    // Градиентные маски по краям
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 60px;
+      z-index: 2;
+      pointer-events: none;
+      
+      @include media-breakpoint-down(md) {
+        width: 30px;
+      }
+    }
+    
+    &::before {
+      left: 0;
+      background: linear-gradient(to right, $asphalt-dark 0%, transparent 100%);
+    }
+    
+    &::after {
+      right: 0;
+      background: linear-gradient(to left, $asphalt-dark 0%, transparent 100%);
+    }
+  }
+  
+  &__track {
+    display: flex;
     gap: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
+    animation: infiniteScroll 50s linear infinite;
+    will-change: transform;
     
     @include media-breakpoint-down(lg) {
-      grid-template-columns: repeat(5, 1fr);
       gap: 15px;
+      animation-duration: 45s;
     }
     
     @include media-breakpoint-down(md) {
-      grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
+      gap: 12px;
+      animation-duration: 40s;
     }
     
-    @include media-breakpoint-down(sm) {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 15px;
-    }
+    // УБИРАЕМ изменение скорости при наведении - это причина скачков
+    // .equipment-icons:hover & {
+    //   animation-duration: 100s;
+    //   transition: animation-duration 0.5s ease;
+    // }
   }
 }
 
 .equipment-icon {
   position: relative;
-  z-index: 2;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 25px 20px;
+  padding: 15px 12px;
   background: rgba($white-color, 0.9);
-  border-radius: $border-radius-lg;
+  border-radius: $border-radius;
   cursor: pointer;
-  transition: $transition-base;
+  transition: all 0.3s ease;
   border: 2px solid transparent;
-  aspect-ratio: 1;
-  min-height: 180px;
+  min-width: 120px;
+  min-height: 120px;
+  flex-shrink: 0;
+  
+  @include media-breakpoint-down(lg) {
+    min-width: 110px;
+    min-height: 110px;
+    padding: 12px 10px;
+  }
+  
+  @include media-breakpoint-down(md) {
+    min-width: 100px;
+    min-height: 100px;
+    padding: 10px 8px;
+  }
+  
+  @include media-breakpoint-down(sm) {
+    min-width: 90px;
+    min-height: 90px;
+    padding: 8px 6px;
+  }
+  
+  // Простой эффект наведения без влияния на анимацию
   &:hover {
     border-color: $primary-color;
-    transform: translateY(-3px);
-    box-shadow: $shadow-lg;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba($primary-color, 0.2);
     background: $white-color;
+    z-index: 10;
+  }
+  
+  // Отключаем взаимодействие с клонами
+  &[aria-hidden="true"] {
+    pointer-events: none;
+    cursor: default;
+    
+    &:hover {
+      transform: none;
+      border-color: transparent;
+      box-shadow: none;
+      background: rgba($white-color, 0.9);
+      z-index: 1;
+    }
   }
   
   &__image {
-    width: 80px;
-    height: 80px;
+    width: 50px;
+    height: 50px;
     object-fit: contain;
-    margin-bottom: 15px;
+    margin-bottom: 8px;
     filter: grayscale(100%);
-    transition: $transition-base;
+    transition: all 0.3s ease;
     
     @include media-breakpoint-down(lg) {
-      width: 70px;
-      height: 70px;
+      width: 45px;
+      height: 45px;
+      margin-bottom: 6px;
     }
     
     @include media-breakpoint-down(md) {
-      width: 60px;
-      height: 60px;
+      width: 40px;
+      height: 40px;
+      margin-bottom: 5px;
+    }
+    
+    @include media-breakpoint-down(sm) {
+      width: 35px;
+      height: 35px;
+      margin-bottom: 4px;
     }
   }
   
   &:hover &__image {
     filter: grayscale(0%);
-    transform: scale(1.1);
+    transform: scale(1.05);
+  }
+  
+  // Клоны не меняют изображения при наведении
+  &[aria-hidden="true"]:hover &__image {
+    filter: grayscale(100%);
+    transform: none;
   }
   
   &__label {
     display: block;
-    font-size: $font-size-lg;
+    font-size: $font-size-sm;
     font-weight: $font-weight-medium;
     color: $asphalt-dark;
     transition: $transition-base;
     line-height: 1.2;
     
     @include media-breakpoint-down(lg) {
-      font-size: $font-size-base;
+      font-size: 12px;
     }
     
     @include media-breakpoint-down(md) {
-      font-size: $font-size-sm;
+      font-size: 11px;
+    }
+    
+    @include media-breakpoint-down(sm) {
+      font-size: 10px;
     }
   }
   
   &:hover &__label {
     color: $primary-color;
+  }
+  
+  // Клоны не меняют цвет текста
+  &[aria-hidden="true"]:hover &__label {
+    color: $asphalt-dark;
+  }
+}
+
+// Простая анимация без скачков
+@keyframes infiniteScroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+// Отключение анимации для пользователей с ограниченными возможностями
+@media (prefers-reduced-motion: reduce) {
+  .equipment-icons__track {
+    animation: none;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  
+  .equipment-icons__carousel {
+    &::before,
+    &::after {
+      display: none;
+    }
   }
 }
 
