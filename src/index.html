@@ -43,104 +43,105 @@
           </div>
       </header>
 
-      <!-- Hero Section -->
-      <section class="hero">
-          <div class="hero__bg-animation"></div>
-          <div class="container">
-              <div class="hero__content">
-                  <div class="hero__text">
-                      <h1 class="hero__title">
-                          Надежный диспетчер<br>
-                          <span class="hero__title-accent">спецтехники в Крыму</span>
-                      </h1>
-                    
-                      <div class="hero__text-blocks">
-                          <p class="hero__text-block">
-                              В моей базе более 1500 единиц техники<br>
-                              С каждым владельцем я знаком лично.
+      <div class="hero-equipment-wrapper">
+          <!-- Hero Section -->
+          <section class="hero">
+              <div class="container">
+                  <div class="hero__content">
+                      <div class="hero__text">
+                          <h1 class="hero__title">
+                              Надежный диспетчер<br>
+                              <span class="hero__title-accent">спецтехники в Крыму</span>
+                          </h1>
+                        
+                          <div class="hero__text-blocks">
+                              <p class="hero__text-block">
+                                  В моей базе более 1500 единиц техники<br>
+                                  С каждым владельцем я знаком лично.
+                              </p>
+                              <p class="hero__text-block">
+                                  Договорюсь по лучшей цене за вас<br>
+                                  Я беру себе 5-10% от стоимости заказа.
+                              </p>
+                              <p class="hero__text-block">
+                                  Предлагаю лучшие цены для бизнеса<br>
+                                  Всю технику вы оплачиваете на один счёт.
+                              </p>
+                              <p class="hero__text-block">
+                                  Я могу подменить технику если она сломается<br>
+                                  Есть собственный бульдозер и кое что еще.
+                              </p>
+                              <p class="hero__text-block">
+                                  Я работаю с НДС (от 10 смен)<br>
+                                  Есть скидка на ГСМ и строительные материалы.
+                              </p>
+                          </div>
+                        
+                          <p class="hero__priority-text">
+                              Расставьте приоритеты и получите скидку на первый заказ
                           </p>
-                          <p class="hero__text-block">
-                              Договорюсь по лучшей цене за вас<br>
-                              Я беру себе 5-10% от стоимости заказа.
-                          </p>
-                          <p class="hero__text-block">
-                              Предлагаю лучшие цены для бизнеса<br>
-                              Всю технику вы оплачиваете на один счёт.
-                          </p>
-                          <p class="hero__text-block">
-                              Я могу подменить технику если она сломается<br>
-                              Есть собственный бульдозер и кое что еще.
-                          </p>
-                          <p class="hero__text-block">
-                              Я работаю с НДС (от 10 смен)<br>
-                              Есть скидка на ГСМ и строительные материалы.
-                          </p>
+                        
+                          <div class="hero__actions">
+                              <button class="btn btn--primary" id="orderBtn">Заказать технику</button>
+                              <button class="btn btn--secondary" id="calculateBtn">Рассчитать стоимость</button>
+                          </div>
                       </div>
-                    
-                      <p class="hero__priority-text">
-                          Расставьте приоритеты и получите скидку на первый заказ
-                      </p>
-                    
-                      <div class="hero__actions">
-                          <button class="btn btn--primary" id="orderBtn">Заказать технику</button>
-                          <button class="btn btn--secondary" id="calculateBtn">Рассчитать стоимость</button>
-                      </div>
-                  </div>
-                  <div class="hero__visual">
-                      <div class="hero__image-container">
-                          <img src="images/tech.jpg" alt="Спецтехника в работе" class="hero__image">
+                      <div class="hero__visual">
+                          <div class="hero__image-container">
+                              <img src="images/color.jpg" alt="Спецтехника в работе" class="hero__image">
+                          </div>
                       </div>
                   </div>
               </div>
-          </div>
-      </section>
+          </section>
 
-      <!-- Equipment Icons Section -->
-      <section class="equipment-icons">
-          <div class="container">
-              <div class="equipment-icons__grid">
-                  <div class="equipment-icon" data-equipment="excavator">
-                      <img src="images/equipment/excavator.png" 
-                           alt="Экскаваторы" 
-                           class="equipment-icon__image"
-                           onerror="console.log('Не найден файл: images/equipment/excavator.png'); this.style.background='red';">
-                      <span class="equipment-icon__label">Экскаваторы</span>
-                  </div>
-                
-                  <div class="equipment-icon" data-equipment="truck">
-                      <img src="images/equipment/truck.png" 
-                           alt="Самосвалы" 
-                           class="equipment-icon__image"
-                           onerror="console.log('Не найден файл: images/equipment/truck.png'); this.style.background='red';">
-                      <span class="equipment-icon__label">Самосвалы</span>
-                  </div>
-                
-                  <div class="equipment-icon" data-equipment="crane">
-                      <img src="images/equipment/crane.png" 
-                           alt="Краны" 
-                           class="equipment-icon__image"
-                           onerror="console.log('Не найден файл: images/equipment/crane.png'); this.style.background='red';">
-                      <span class="equipment-icon__label">Краны</span>
-                  </div>
-                
-                  <div class="equipment-icon" data-equipment="bulldozer">
-                      <img src="images/equipment/bulldozer.png" 
-                           alt="Бульдозеры" 
-                           class="equipment-icon__image"
-                           onerror="console.log('Не найден файл: images/equipment/bulldozer.png'); this.style.background='red';">
-                      <span class="equipment-icon__label">Бульдозеры</span>
-                  </div>
-                
-                  <div class="equipment-icon" data-equipment="loader">
-                      <img src="images/equipment/loader.png" 
-                           alt="Погрузчики" 
-                           class="equipment-icon__image"
-                           onerror="console.log('Не найден файл: images/equipment/loader.png'); this.style.background='red';">
-                      <span class="equipment-icon__label">Погрузчики</span>
+          <!-- Equipment Icons Section -->
+          <section class="equipment-icons">
+              <div class="container">
+                  <div class="equipment-icons__grid">
+                      <div class="equipment-icon" data-equipment="excavator">
+                          <img src="images/equipment/excavator.png" 
+                               alt="Экскаваторы" 
+                               class="equipment-icon__image"
+                               onerror="console.log('Не найден файл: images/equipment/excavator.png'); this.style.background='red';">
+                          <span class="equipment-icon__label">Экскаваторы</span>
+                      </div>
+                    
+                      <div class="equipment-icon" data-equipment="truck">
+                          <img src="images/equipment/truck.png" 
+                               alt="Самосвалы" 
+                               class="equipment-icon__image"
+                               onerror="console.log('Не найден файл: images/equipment/truck.png'); this.style.background='red';">
+                          <span class="equipment-icon__label">Самосвалы</span>
+                      </div>
+                    
+                      <div class="equipment-icon" data-equipment="crane">
+                          <img src="images/equipment/crane.png" 
+                               alt="Краны" 
+                               class="equipment-icon__image"
+                               onerror="console.log('Не найден файл: images/equipment/crane.png'); this.style.background='red';">
+                          <span class="equipment-icon__label">Краны</span>
+                      </div>
+                    
+                      <div class="equipment-icon" data-equipment="bulldozer">
+                          <img src="images/equipment/bulldozer.png" 
+                               alt="Бульдозеры" 
+                               class="equipment-icon__image"
+                               onerror="console.log('Не найден файл: images/equipment/bulldozer.png'); this.style.background='red';">
+                          <span class="equipment-icon__label">Бульдозеры</span>
+                      </div>
+                    
+                      <div class="equipment-icon" data-equipment="loader">
+                          <img src="images/equipment/loader.png" 
+                               alt="Погрузчики" 
+                               class="equipment-icon__image"
+                               onerror="console.log('Не найден файл: images/equipment/loader.png'); this.style.background='red';">
+                          <span class="equipment-icon__label">Погрузчики</span>
+                      </div>
                   </div>
               </div>
-          </div>
-      </section>
+          </section>
+      </div>
 
       <!-- Map Section -->
       <section class="map-section">

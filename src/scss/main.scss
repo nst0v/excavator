@@ -19,11 +19,10 @@ body {
   font-size: $font-size-base;
   line-height: $line-height-base;
   color: $white-color;
-  background: linear-gradient(135deg, $asphalt-dark 0%, $asphalt-medium 100%);
+  background: $asphalt-dark; // Убираем градиент, используем сплошной цвет
   overflow-x: hidden;
 }
 
-// Container - ВАЖНО! Возвращаем контейнер
 .container {
   width: 100%;
   padding-right: 15px;
@@ -112,10 +111,11 @@ a {
   min-height: 48px;
   
   &--primary {
-    background: $primary-gradient;
+    background: $primary-gradient; // Теперь это сплошной цвет
     color: $white-color;
     
     &:hover {
+      background: $accent-color; // Меняем цвет при hover
       transform: translateY(-2px);
       box-shadow: $shadow-lg;
     }
@@ -278,17 +278,15 @@ a {
   }
 }
 
-// Hero section
-.hero {
+// Создаем общий контейнер для hero и equipment-icons
+.hero-equipment-wrapper {
   position: relative;
-  min-height: 100vh;
   background: $hero-gradient;
-  color: $white-color;
-  @include flex-center;
-  padding-top: 80px;
   overflow: hidden;
   
-  &__bg-animation {
+  // Единый фон с анимацией для всего блока
+  &::before {
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
@@ -299,6 +297,23 @@ a {
       radial-gradient(circle at 20% 80%, rgba($primary-color, 0.1) 0%, transparent 50%),
       radial-gradient(circle at 80% 20%, rgba($primary-color, 0.1) 0%, transparent 50%);
     animation: float 6s ease-in-out infinite;
+    pointer-events: none;
+  }
+}
+
+// Hero section - убираем фон, он теперь у родителя
+.hero {
+  position: relative;
+  min-height: 100vh;
+  background: none; // Убираем фон
+  color: $white-color;
+  @include flex-center;
+  padding-top: 80px;
+  z-index: 1;
+  
+  // Убираем собственную анимацию фона
+  &__bg-animation {
+    display: none; // Отключаем, используем общий фон
   }
   
   &__content {
@@ -335,10 +350,7 @@ a {
   }
   
   &__title-accent {
-    background: linear-gradient(45deg, $primary-color, $accent-color);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: $primary-color; // Убираем градиент текста, используем сплошной цвет
     display: block;
   }
   
@@ -423,49 +435,53 @@ a {
   }
 }
 
-// Equipment Icons Section
+// Equipment Icons Section - убираем фон
 .equipment-icons {
+  position: relative;
   padding: map.get($spacers, 6) 0;
-  background: $hero-gradient; // Такой же фон как у hero секции
+  background: none; // Убираем фон
+  z-index: 1;
   
   &__grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr); // Фиксированно 5 колонок
+    grid-template-columns: repeat(5, 1fr);
     gap: 20px;
-    max-width: 1200px; // Увеличиваем максимальную ширину
+    max-width: 1200px;
     margin: 0 auto;
     
     @include media-breakpoint-down(lg) {
-      grid-template-columns: repeat(5, 1fr); // Сохраняем 5 колонок на больших экранах
+      grid-template-columns: repeat(5, 1fr);
       gap: 15px;
     }
     
     @include media-breakpoint-down(md) {
-      grid-template-columns: repeat(3, 1fr); // На средних экранах 3 колонки
+      grid-template-columns: repeat(3, 1fr);
       gap: 15px;
     }
     
     @include media-breakpoint-down(sm) {
-      grid-template-columns: repeat(2, 1fr); // На маленьких экранах 2 колонки
+      grid-template-columns: repeat(2, 1fr);
       gap: 15px;
     }
   }
 }
 
 .equipment-icon {
+  position: relative;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center; // Центрируем содержимое по вертикали
+  justify-content: center;
   text-align: center;
-  padding: 25px 20px; // Увеличиваем отступы
+  padding: 25px 20px;
   background: rgba($white-color, 0.9);
   border-radius: $border-radius-lg;
   cursor: pointer;
   transition: $transition-base;
   border: 2px solid transparent;
-  aspect-ratio: 1; // Делаем карточки квадратными
-  min-height: 180px; // Увеличиваем минимальную высоту
+  aspect-ratio: 1;
+  min-height: 180px;
   
   &:hover {
     border-color: $primary-color;
