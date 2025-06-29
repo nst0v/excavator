@@ -334,6 +334,22 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 class SpezzApp {
     constructor() {
+        this.currentSlide = 0;
+        this.slides = [];
+        this.isAnimating = false;
+        this.autoplayInterval = null;
+        this.autoplayDelay = 5000; // 5 секунд
+        
+        // Для карусели оборудования
+        this.equipmentCarousel = {
+            track: null,
+            isAnimating: false,
+            currentTranslate: 0,
+            startPos: 0,
+            isDragging: false,
+            animationId: null
+        };
+        
         this.init();
     }
 
@@ -343,42 +359,436 @@ class SpezzApp {
         this.initForms();
         this.initHeader();
         this.initModal();
-        this.initMobileTextRotation();
+        this.initHeroSlider();
+        this.initEquipmentCarousel();
     }
 
-    initMobileTextRotation() {
-        const mobileTextCard = document.getElementById('mobileTextCard');
+    initEquipmentCarousel() {
+        const track = document.getElementById('equipmentTrack');
+        if (!track) return;
+
+        this.equipmentCarousel.track = track;
         
-        if (!mobileTextCard || window.innerWidth > 992) {
-            return;
+        // Останавливаем CSS анимацию
+        const groups = track.querySelectorAll('.equipment-icons__group');
+        groups.forEach(group => {
+            group.style.animationPlayState = 'paused';
+        });
+
+        // Инициализируем позицию
+        this.equipmentCarousel.currentTranslate = 0;
+        this.updateCarouselPosition();
+
+        // Добавляем обработчики событий
+        this.addCarouselEventListeners();
+        
+        // Запускаем автопрокрутку
+        this.startEquipmentAutoScroll();
+    }
+
+    addCarouselEventListeners() {
+        const track = this.equipmentCarousel.track;
+        
+        // Touch события
+        track.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: false });
+        track.addEventListener('touchmove', this.handleTouchMove.bind(this), { passive: false });
+        track.addEventListener('touchend', this.handleTouchEnd.bind(this));
+
+        // Mouse события для десктопа
+        track.addEventListener('mousedown', this.handleMouseDown.bind(this));
+        track.addEventListener('mousemove', this.handleMouseMove.bind(this));
+        track.addEventListener('mouseup', this.handleMouseUp.bind(this));
+        track.addEventListener('mouseleave', this.handleMouseUp.bind(this));
+
+        // Предотвращаем выделение текста
+        track.addEventListener('selectstart', (e) => e.preventDefault());
+        
+        // Останавливаем автопрокрутку при взаимодействии
+        track.addEventListener('mouseenter', () => this.pauseEquipmentAutoScroll());
+        track.addEventListener('mouseleave', () => this.startEquipmentAutoScroll());
+    }
+
+    handleTouchStart(e) {
+        this.equipmentCarousel.isDragging = true;
+        this.equipmentCarousel.startPos = e.touches[0].clientX;
+        this.pauseEquipmentAutoScroll();
+        
+        // Останавливаем текущую анимацию
+        if (this.equipmentCarousel.animationId) {
+            cancelAnimationFrame(this.equipmentCarousel.animationId);
+        }
+    }
+
+    handleTouchMove(e) {
+        if (!this.equipmentCarousel.isDragging) return;
+        
+        e.preventDefault();
+        const currentPosition = e.touches[0].clientX;
+        const diff = currentPosition - this.equipmentCarousel.startPos;
+        
+        this.equipmentCarousel.currentTranslate += diff * 0.8; // Коэффициент чувствительности
+        this.equipmentCarousel.startPos = currentPosition;
+        
+        this.updateCarouselPosition();
+    }
+
+    handleTouchEnd() {
+        this.equipmentCarousel.isDragging = false;
+        this.checkCarouselBounds();
+        this.startEquipmentAutoScroll();
+    }
+
+    handleMouseDown(e) {
+        this.equipmentCarousel.isDragging = true;
+        this.equipmentCarousel.startPos = e.clientX;
+        this.pauseEquipmentAutoScroll();
+        
+        if (this.equipmentCarousel.animationId) {
+            cancelAnimationFrame(this.equipmentCarousel.animationId);
+        }
+    }
+
+    handleMouseMove(e) {
+        if (!this.equipmentCarousel.isDragging) return;
+        
+        e.preventDefault();
+        const currentPosition = e.clientX;
+        const diff = currentPosition - this.equipmentCarousel.startPos;
+        
+        this.equipmentCarousel.currentTranslate += diff * 0.8;
+        this.equipmentCarousel.startPos = currentPosition;
+        
+        this.updateCarouselPosition();
+    }
+
+    handleMouseUp() {
+        this.equipmentCarousel.isDragging = false;
+        this.checkCarouselBounds();
+        this.startEquipmentAutoScroll();
+    }
+
+    updateCarouselPosition() {
+        const track = this.equipmentCarousel.track;
+        if (!track) return;
+
+        track.style.transform = `translateX(${this.equipmentCarousel.currentTranslate}px)`;
+    }
+
+    checkCarouselBounds() {
+        const track = this.equipmentCarousel.track;
+        if (!track) return;
+
+        const firstGroup = track.querySelector('.equipment-icons__group');
+        if (!firstGroup) return;
+
+        const groupWidth = firstGroup.offsetWidth + 20; // 20px - это gap между группами
+        
+        // Если прокрутили слишком далеко влево (показываем вторую группу)
+        if (this.equipmentCarousel.currentTranslate <= -groupWidth) {
+            this.equipmentCarousel.currentTranslate += groupWidth;
         }
         
-        const texts = [
-            'В моей базе более <strong>1500 единиц</strong> техники<br>С каждым владельцем я знаком лично.',
-            'Договорюсь по лучшей цене за вас<br>Я беру себе <strong>5-10%</strong> от стоимости заказа.',
-            'Предлагаю <strong>лучшие цены</strong> для бизнеса<br>Всю технику вы оплачиваете на один счёт.',
-            'Я могу <strong>подменить технику</strong> если она сломается<br>Есть собственный бульдозер и кое что еще.',
-            'Я работаю <strong>с НДС</strong> (от 10 смен)<br>Есть скидка на ГСМ и строительные материалы.'
-        ];
+        // Если прокрутили слишком далеко вправо
+        if (this.equipmentCarousel.currentTranslate > 0) {
+            this.equipmentCarousel.currentTranslate -= groupWidth;
+        }
+
+        // Плавно возвращаем в правильную позицию
+        this.animateCarouselToPosition();
+    }
+
+    animateCarouselToPosition() {
+        const track = this.equipmentCarousel.track;
+        if (!track) return;
+
+        const animate = () => {
+            track.style.transform = `translateX(${this.equipmentCarousel.currentTranslate}px)`;
+        };
+
+        // Используем CSS transition для плавности
+        track.style.transition = 'transform 0.3s ease-out';
+        animate();
         
-        let currentIndex = 0;
+        setTimeout(() => {
+            track.style.transition = '';
+        }, 300);
+    }
+
+    startEquipmentAutoScroll() {
+        this.pauseEquipmentAutoScroll();
         
-        const rotateText = () => {
-            mobileTextCard.classList.add('fade-out');
-            
-            setTimeout(() => {
-                currentIndex = (currentIndex + 1) % texts.length;
-                mobileTextCard.innerHTML = texts[currentIndex];
-                mobileTextCard.classList.remove('fade-out');
-                mobileTextCard.classList.add('fade-in');
-                
-                setTimeout(() => {
-                    mobileTextCard.classList.remove('fade-in');
-                }, 500);
-            }, 250);
+        const autoScroll = () => {
+            if (!this.equipmentCarousel.isDragging) {
+                this.equipmentCarousel.currentTranslate -= 0.3; // Скорость автопрокрутки
+                this.updateCarouselPosition();
+                this.checkCarouselBounds();
+            }
+            this.equipmentCarousel.animationId = requestAnimationFrame(autoScroll);
         };
         
-        setInterval(rotateText, 4000);
+        this.equipmentCarousel.animationId = requestAnimationFrame(autoScroll);
+    }
+
+    pauseEquipmentAutoScroll() {
+        if (this.equipmentCarousel.animationId) {
+            cancelAnimationFrame(this.equipmentCarousel.animationId);
+            this.equipmentCarousel.animationId = null;
+        }
+    }
+
+    initHeroSlider() {
+        // Данные для слайдов
+        this.slides = [
+            {
+                title: "1500+ единиц техники",
+                text: "В моей базе более <strong>1500 единиц</strong> техники<br>С каждым владельцем я знаком лично."
+            },
+            {
+                title: "Лучшие цены",
+                text: "Договорюсь по лучшей цене за вас<br>Я беру себе <strong>5-10%</strong> от стоимости заказа."
+            },
+            {
+                title: "Для бизнеса",
+                text: "Предлагаю <strong>лучшие цены</strong> для бизнеса<br>Всю технику вы оплачиваете на один счёт."
+            },
+            {
+                title: "Замена техники",
+                text: "Я могу <strong>подменить технику</strong> если она сломается<br>Есть собственный бульдозер и кое что еще."
+            },
+            {
+                title: "Работа с НДС",
+                text: "Я работаю <strong>с НДС</strong> (от 10 смен)<br>Есть скидка на ГСМ и строительные материалы."
+            }
+        ];
+
+        this.createHeroSlider();
+        this.initSliderControls();
+        this.startAutoplay();
+    }
+
+    createHeroSlider() {
+        const heroContent = document.querySelector('.hero__content');
+        if (!heroContent) return;
+
+        // Создаем структуру слайдера
+        const sliderHTML = `
+            <h1 class="hero__title">
+                Надежный диспетчер
+                <span class="hero__title-accent">спецтехники в Крыму</span>
+            </h1>
+            
+            <div class="hero__main-container">
+                <div class="hero__background">
+                    <img src="images/man.png" alt="Спецтехника в работе" class="hero__background-image">
+                </div>
+                
+                <div class="hero__advantages-stack">
+                    ${this.slides.map((slide, index) => `
+                        <div class="hero__advantage-card ${index === 0 ? 'active' : ''}" data-slide="${index}">
+                            <div class="hero__advantage-content">
+                                <h3 class="hero__advantage-title">${slide.title}</h3>
+                                <p class="hero__advantage-text">${slide.text}</p>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div class="hero__navigation">
+                    <button class="hero__nav-btn hero__nav-btn--prev" id="prevBtn">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                        </svg>
+                    </button>
+                    <button class="hero__nav-btn hero__nav-btn--next" id="nextBtn">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="hero__progress-indicators">
+                ${this.slides.map((_, index) => `
+                    <div class="hero__progress-dot ${index === 0 ? 'active' : ''}" data-slide="${index}"></div>
+                `).join('')}
+            </div>
+            
+            <div class="hero__actions">
+                <button class="btn btn--primary" id="orderBtn">
+                    Заказать технику
+                </button>
+                <button class="btn btn--secondary" id="calculateBtn">
+                    Рассчитать стоимость
+                </button>
+            </div>
+        `;
+
+        heroContent.innerHTML = sliderHTML;
+    }
+
+    initSliderControls() {
+        // Навигационные кнопки
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => this.prevSlide());
+        }
+
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => this.nextSlide());
+        }
+
+        // Индикаторы прогресса
+        const progressDots = document.querySelectorAll('.hero__progress-dot');
+        progressDots.forEach((dot, index) => {
+            dot.addEventListener('click', () => this.goToSlide(index));
+        });
+
+        // Карточки (клик для перехода)
+        const cards = document.querySelectorAll('.hero__advantage-card');
+        cards.forEach((card, index) => {
+            card.addEventListener('click', () => {
+                if (index !== this.currentSlide) {
+                    this.goToSlide(index);
+                }
+            });
+        });
+
+        // Пауза автопроигрывания при наведении
+        const heroContainer = document.querySelector('.hero__main-container');
+        if (heroContainer) {
+            heroContainer.addEventListener('mouseenter', () => this.pauseAutoplay());
+            heroContainer.addEventListener('mouseleave', () => this.startAutoplay());
+        }
+
+        // Управление с клавиатуры
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                this.prevSlide();
+            } else if (e.key === 'ArrowRight') {
+                this.nextSlide();
+            }
+        });
+
+        // Touch/swipe поддержка
+        this.initTouchControls();
+    }
+
+    initTouchControls() {
+        const container = document.querySelector('.hero__advantages-stack');
+        if (!container) return;
+
+        let startX = 0;
+        let startY = 0;
+        let endX = 0;
+        let endY = 0;
+
+        container.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+        });
+
+        container.addEventListener('touchend', (e) => {
+            endX = e.changedTouches[0].clientX;
+            endY = e.changedTouches[0].clientY;
+            this.handleSwipe();
+        });
+
+        const handleSwipe = () => {
+            const deltaX = endX - startX;
+            const deltaY = endY - startY;
+            const minSwipeDistance = 50;
+
+            // Проверяем, что это горизонтальный свайп
+            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > minSwipeDistance) {
+                if (deltaX > 0) {
+                    this.prevSlide();
+                } else {
+                    this.nextSlide();
+                }
+            }
+        };
+
+        this.handleSwipe = handleSwipe;
+    }
+
+    nextSlide() {
+        if (this.isAnimating) return;
+        
+        const nextIndex = (this.currentSlide + 1) % this.slides.length;
+        this.goToSlide(nextIndex);
+    }
+
+    prevSlide() {
+        if (this.isAnimating) return;
+        
+        const prevIndex = this.currentSlide === 0 ? this.slides.length - 1 : this.currentSlide - 1;
+        this.goToSlide(prevIndex);
+    }
+
+    goToSlide(index) {
+        if (this.isAnimating || index === this.currentSlide) return;
+
+        this.isAnimating = true;
+        const cards = document.querySelectorAll('.hero__advantage-card');
+        const dots = document.querySelectorAll('.hero__progress-dot');
+
+        // Убираем активные классы
+        cards.forEach(card => {
+            card.classList.remove('active', 'next', 'prev');
+        });
+        
+        dots.forEach(dot => {
+            dot.classList.remove('active');
+        });
+
+        // Устанавливаем новые классы
+        cards[index].classList.add('active');
+        dots[index].classList.add('active');
+
+        // Устанавливаем соседние карточки
+        const nextIndex = (index + 1) % this.slides.length;
+        const prevIndex = index === 0 ? this.slides.length - 1 : index - 1;
+
+        if (cards[nextIndex]) {
+            cards[nextIndex].classList.add('next');
+        }
+        
+        if (cards[prevIndex]) {
+            cards[prevIndex].classList.add('prev');
+        }
+
+        this.currentSlide = index;
+
+        // Разблокируем анимацию через время перехода
+        setTimeout(() => {
+            this.isAnimating = false;
+        }, 600);
+
+        // Перезапускаем автопроигрывание
+        this.restartAutoplay();
+    }
+
+    startAutoplay() {
+        this.pauseAutoplay(); // Очищаем предыдущий интервал
+        this.autoplayInterval = setInterval(() => {
+            this.nextSlide();
+        }, this.autoplayDelay);
+    }
+
+    pauseAutoplay() {
+        if (this.autoplayInterval) {
+            clearInterval(this.autoplayInterval);
+            this.autoplayInterval = null;
+        }
+    }
+
+    restartAutoplay() {
+        this.pauseAutoplay();
+        setTimeout(() => {
+            this.startAutoplay();
+        }, 1000); // Небольшая задержка после ручного переключения
     }
 
     initScrollAnimations() {
@@ -447,22 +857,20 @@ class SpezzApp {
         }
 
         // Кнопки в hero секции
-        const orderBtn = document.getElementById('orderBtn');
-        const calculateBtn = document.getElementById('calculateBtn');
-
-        if (orderBtn) {
-            orderBtn.addEventListener('click', () => {
-                document.getElementById('contactForm').scrollIntoView({ 
-                    behavior: 'smooth' 
-                });
-            });
-        }
-
-        if (calculateBtn) {
-            calculateBtn.addEventListener('click', () => {
+        document.addEventListener('click', (e) => {
+            if (e.target.id === 'orderBtn') {
+                const contactForm = document.getElementById('contactForm');
+                if (contactForm) {
+                    contactForm.scrollIntoView({ 
+                        behavior: 'smooth' 
+                    });
+                }
+            }
+            
+            if (e.target.id === 'calculateBtn') {
                 this.showCalculatorModal();
-            });
-        }
+            }
+        });
     }
 
     initModal() {
@@ -532,6 +940,9 @@ class SpezzApp {
         modal.classList.add('show');
         document.body.style.overflow = 'hidden';
         
+        // Пауза автопроигрывания при открытии модального окна
+        this.pauseAutoplay();
+        
         // Фокус на первое поле
         setTimeout(() => {
             const firstInput = modal.querySelector('.form-select');
@@ -543,6 +954,9 @@ class SpezzApp {
         const modal = document.getElementById(modalId);
         modal.classList.remove('show');
         document.body.style.overflow = '';
+        
+        // Возобновляем автопроигрывание при закрытии модального окна
+        this.startAutoplay();
     }
 
     handleCallbackForm(form) {
@@ -661,11 +1075,39 @@ class SpezzApp {
             lastScrollY = currentScrollY;
         });
     }
+
+    // Метод для остановки автопроигрывания при уходе со страницы
+    destroy() {
+        this.pauseAutoplay();
+        this.pauseEquipmentAutoScroll();
+    }
 }
 
 // Инициализация приложения
+let app;
+
 document.addEventListener('DOMContentLoaded', () => {
-    new SpezzApp();
+    app = new SpezzApp();
+});
+
+// Остановка автопроигрывания при уходе со страницы
+window.addEventListener('beforeunload', () => {
+    if (app) {
+        app.destroy();
+    }
+});
+
+// Пауза при потере фокуса страницы
+document.addEventListener('visibilitychange', () => {
+    if (app) {
+        if (document.hidden) {
+            app.pauseAutoplay();
+            app.pauseEquipmentAutoScroll();
+        } else {
+            app.startAutoplay();
+            app.startEquipmentAutoScroll();
+        }
+    }
 });
 
 // Дополнительные утилиты

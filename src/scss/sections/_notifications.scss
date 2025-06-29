@@ -1,0 +1,98 @@
+// Notification styles
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba($asphalt-medium, 0.95);
+  border: 2px solid $primary-color;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-xl;
+  padding: 20px;
+  max-width: 400px;
+  z-index: $z-index-modal;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  backdrop-filter: blur(10px);
+  
+  @include media-breakpoint-down(md) {
+    left: 20px;
+    right: 20px;
+    max-width: none;
+  }
+  
+  &.show {
+    transform: translateX(0);
+    animation: slideInRight 0.3s ease-out;
+  }
+  
+  &--success {
+    border-color: $success-color;
+    
+    .notification__icon {
+      color: $success-color;
+    }
+  }
+  
+  &--error {
+    border-color: #dc3545;
+    
+    .notification__icon {
+      color: #dc3545;
+    }
+  }
+  
+  &--warning {
+    border-color: $accent-color;
+    
+    .notification__icon {
+      color: $accent-color;
+    }
+  }
+  
+  &__content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  &__icon {
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+  
+  &__text {
+    flex: 1;
+    font-weight: $font-weight-medium;
+    color: $white-color;
+    line-height: $line-height-base;
+  }
+  
+  &__close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: rgba($white-color, 0.6);
+    transition: $transition-base;
+    width: 30px;
+    height: 30px;
+    @include flex-center;
+    border-radius: 50%;
+    
+    &:hover {
+      color: $white-color;
+      background: rgba($white-color, 0.1);
+    }
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

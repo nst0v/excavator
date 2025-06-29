@@ -1,0 +1,711 @@
+// Создаем общий контейнер для hero и equipment-icons
+.hero-equipment-wrapper {
+  position: relative;
+  background: $hero-gradient;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.1;
+    background-image: 
+      radial-gradient(circle at 20% 80%, rgba($primary-color, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba($primary-color, 0.1) 0%, transparent 50%);
+    animation: float 6s ease-in-out infinite;
+    pointer-events: none;
+  }
+}
+
+// Стеклянная карточка для лучшей читаемости
+.glass-card {
+  background: rgba($asphalt-dark, 0.85);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba($primary-color, 0.2);
+  border-radius: 16px;
+  box-shadow: 
+    0 8px 32px rgba($asphalt-dark, 0.4),
+    inset 0 1px 0 rgba($white-color, 0.1);
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+      rgba($primary-color, 0.1) 0%, 
+      rgba($accent-color, 0.05) 100%);
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  &:hover::before,
+  &.active::before {
+    opacity: 1;
+  }
+}
+
+// Hero section - новая структура со слайдером
+.hero {
+  position: relative;
+  min-height: 100vh;
+  background: none;
+  color: $white-color;
+  @include flex-center;
+  padding-top: 80px;
+  z-index: 1;
+  
+  @include media-breakpoint-down(lg) {
+    padding-top: 90px;
+  }
+  
+  &__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 1400px;
+    gap: 40px;
+    
+    @include media-breakpoint-down(lg) {
+      gap: 30px;
+    }
+  }
+  
+  &__title {
+    font-size: $font-size-hero;
+    font-weight: $font-weight-bold;
+    line-height: 1.1;
+    text-align: center;
+    margin-bottom: 0;
+    
+    @include media-breakpoint-down(lg) {
+      font-size: 40px;
+    }
+    
+    @include media-breakpoint-down(md) {
+      font-size: 32px;
+    }
+    
+    @include media-breakpoint-down(sm) {
+      font-size: 28px;
+      line-height: 1.2;
+    }
+  }
+  
+  &__title-accent {
+    color: $primary-color;
+    display: block;
+  }
+  
+  // Основной контейнер слайдера
+  &__main-container {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    height: 500px;
+    
+    @include media-breakpoint-down(lg) {
+      height: 450px;
+    }
+    
+    @include media-breakpoint-down(md) {
+      height: 400px;
+    }
+    
+    @include media-breakpoint-down(sm) {
+      height: 350px;
+    }
+  }
+  
+  // Фоновое изображение
+  &__background {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    
+    &-image {
+      width: 400px;
+      height: 400px;
+      object-fit: contain;
+      opacity: 0.6;
+      filter: brightness(0.8);
+      
+      @include media-breakpoint-down(lg) {
+        width: 350px;
+        height: 350px;
+      }
+      
+      @include media-breakpoint-down(md) {
+        width: 300px;
+        height: 300px;
+      }
+      
+      @include media-breakpoint-down(sm) {
+        width: 250px;
+        height: 250px;
+      }
+    }
+  }
+  
+  // Стек карточек преимуществ
+  &__advantages-stack {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+  }
+  
+  // Карточка преимущества
+  &__advantage-card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 320px;
+    min-height: 120px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    visibility: hidden; // Добавляем скрытие для лучшего контроля
+    transform: translate(-50%, -50%) scale(0.8) rotateY(15deg);
+    
+    @include media-breakpoint-down(lg) {
+      width: 300px;
+      min-height: 110px;
+      padding: 18px;
+    }
+    
+    @include media-breakpoint-down(md) {
+      width: 280px;
+      min-height: 100px;
+      padding: 16px;
+    }
+    
+    @include media-breakpoint-down(sm) {
+      width: 260px;
+      min-height: 90px;
+      padding: 15px;
+    }
+    
+    // Активная карточка - полностью видимая
+    &.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -50%) scale(1) rotateY(0deg);
+      border-color: $primary-color;
+      box-shadow: 
+        0 20px 60px rgba($primary-color, 0.3),
+        0 0 0 1px rgba($primary-color, 0.5);
+      z-index: 10;
+    }
+    
+    // Следующая карточка (справа) - слегка видимая без текста
+    &.next {
+      opacity: 0.15; // Очень слабая прозрачность
+      visibility: visible;
+      transform: translate(-20%, -50%) scale(0.85) rotateY(-10deg);
+      z-index: 5;
+      
+      // Скрываем текст в неактивных карточках
+      .hero__advantage-content {
+        opacity: 0;
+      }
+      
+      @include media-breakpoint-down(md) {
+        opacity: 0.1;
+        transform: translate(-10%, -50%) scale(0.8) rotateY(-15deg);
+      }
+      
+      @include media-breakpoint-down(sm) {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+    
+    // Предыдущая карточка (слева) - слегка видимая без текста
+    &.prev {
+      opacity: 0.15; // Очень слабая прозрачность
+      visibility: visible;
+      transform: translate(-80%, -50%) scale(0.85) rotateY(10deg);
+      z-index: 5;
+      
+      // Скрываем текст в неактивных карточках
+      .hero__advantage-content {
+        opacity: 0;
+      }
+      
+      @include media-breakpoint-down(md) {
+        opacity: 0.1;
+        transform: translate(-90%, -50%) scale(0.8) rotateY(15deg);
+      }
+      
+      @include media-breakpoint-down(sm) {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+    
+    // Дальние карточки - полностью скрыты
+    &.far-next,
+    &.far-prev {
+      opacity: 0;
+      visibility: hidden;
+      z-index: 1;
+    }
+    
+    &:hover:not(.active) {
+      border-color: rgba($accent-color, 0.6);
+      box-shadow: 
+        0 15px 40px rgba($primary-color, 0.2),
+        0 0 0 1px rgba($accent-color, 0.3);
+    }
+  }
+
+  &__advantage-content {
+    position: relative;
+    z-index: 2;
+    transition: opacity 0.3s ease; // Плавный переход для контента
+  }
+
+  &__advantage-title,
+  &__advantage-text {
+    transition: all 0.4s ease;
+    transform: translateY(0);
+  }
+
+  // Анимация появления текста в активной карточке
+  &__advantage-card.active {
+    .hero__advantage-title,
+    .hero__advantage-text {
+      animation: slideInUp 0.6s ease-out 0.2s both;
+    }
+  }
+
+  &__advantage-title {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    margin-bottom: 12px;
+    color: $primary-color;
+    
+    // Градиент для заголовка
+    background: linear-gradient(135deg, $primary-color 0%, $accent-color 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    
+    // Fallback для браузеров без поддержки
+    @supports not (-webkit-background-clip: text) {
+      color: $primary-color;
+    }
+    
+    @include media-breakpoint-down(lg) {
+      font-size: $font-size-base;
+      margin-bottom: 10px;
+    }
+    
+    @include media-breakpoint-down(md) {
+      font-size: $font-size-sm;
+      margin-bottom: 8px;
+    }
+  }
+
+  &__advantage-text {
+    font-size: $font-size-base;
+    line-height: $line-height-base;
+    color: rgba($white-color, 0.95);
+    margin: 0;
+    text-shadow: 0 1px 2px rgba($asphalt-dark, 0.5);
+    
+    @include media-breakpoint-down(lg) {
+      font-size: $font-size-sm;
+    }
+    
+    @include media-breakpoint-down(md) {
+      font-size: 13px;
+      line-height: 1.4;
+    }
+    
+    strong {
+      color: $accent-color;
+      font-weight: $font-weight-semibold;
+      text-shadow: 0 1px 2px rgba($asphalt-dark, 0.8);
+    }
+  }
+
+  // Индикаторы прогресса
+  &__progress-indicators {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    z-index: 10;
+    animation: fadeInUp 0.6s ease-out 0.8s both;
+    
+    @include media-breakpoint-down(lg) {
+      gap: 10px;
+    }
+    
+    @include media-breakpoint-down(md) {
+      gap: 8px;
+    }
+    
+    @include media-breakpoint-down(sm) {
+      gap: 6px;
+    }
+  }
+
+  &__progress-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba($white-color, 0.3);
+    cursor: pointer;
+    transition: $transition-base;
+    position: relative;
+    
+    @include media-breakpoint-down(lg) {
+      width: 10px;
+      height: 10px;
+    }
+    
+    @include media-breakpoint-down(md) {
+      width: 8px;
+      height: 8px;
+    }
+    
+    @include media-breakpoint-down(sm) {
+      width: 8px;
+      height: 8px;
+    }
+    
+    // Пульсация для привлечения внимания
+    &::after {
+      content: '';
+      position: absolute;
+      top: -4px;
+      left: -4px;
+      right: -4px;
+      bottom: -4px;
+      border: 2px solid rgba($primary-color, 0.3);
+      border-radius: 50%;
+      animation: pulse-ring 2s infinite;
+    }
+    
+    &.active {
+      background: $primary-color;
+      transform: scale(1.3);
+      box-shadow: 0 0 10px rgba($primary-color, 0.6);
+      
+      &::after {
+        content: '';
+        position: absolute;
+        top: -4px;
+        left: -4px;
+        right: -4px;
+        bottom: -4px;
+        border: 2px solid rgba($primary-color, 0.4);
+        border-radius: 50%;
+        animation: pulse-ring 2s infinite;
+      }
+    }
+    
+    &:hover:not(.active) {
+      background: rgba($primary-color, 0.6);
+      transform: scale(1.1);
+    }
+  }
+
+  // Навигационные стрелки
+  &__navigation {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+    z-index: 15;
+    padding: 0 20px;
+    animation: fadeInUp 0.6s ease-out 0.8s both;
+    
+    @include media-breakpoint-down(lg) {
+      padding: 0 15px;
+    }
+    
+    @include media-breakpoint-down(md) {
+      padding: 0 10px;
+    }
+    
+    @include media-breakpoint-down(sm) {
+      display: none; // Скрываем на мобильных
+    }
+  }
+
+  &__nav-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba($asphalt-dark, 0.9);
+    border: 2px solid rgba($primary-color, 0.3);
+    color: $primary-color;
+    cursor: pointer;
+    transition: $transition-base;
+    @include flex-center;
+    pointer-events: all;
+    backdrop-filter: blur(10px);
+    position: relative;
+    
+    @include media-breakpoint-down(lg) {
+      width: 45px;
+      height: 45px;
+    }
+    
+    @include media-breakpoint-down(md) {
+      width: 40px;
+      height: 40px;
+    }
+    
+    svg {
+      width: 24px;
+      height: 24px;
+      
+      @include media-breakpoint-down(lg) {
+        width: 20px;
+        height: 20px;
+      }
+      
+      @include media-breakpoint-down(md) {
+        width: 18px;
+        height: 18px;
+      }
+    }
+    
+    &:hover {
+      background: rgba($primary-color, 0.2);
+      border-color: $primary-color;
+      transform: scale(1.1);
+      box-shadow: 0 5px 20px rgba($primary-color, 0.3);
+    }
+    
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  // Кнопки действий
+  &__actions {
+    display: flex;
+    gap: 25px;
+    justify-content: center;
+    z-index: 10;
+    animation: fadeInUp 0.6s ease-out 1s both;
+    
+    @include media-breakpoint-down(lg) {
+      gap: 20px;
+    }
+    
+    @include media-breakpoint-down(md) {
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      width: 100%;
+      max-width: 300px;
+    }
+    
+    .btn {
+      padding: 15px 30px;
+      font-size: $font-size-lg;
+      min-height: 52px;
+      
+      @include media-breakpoint-down(lg) {
+        padding: 12px 24px;
+        font-size: $font-size-base;
+        min-height: 48px;
+      }
+      
+      @include media-breakpoint-down(md) {
+        padding: 12px 20px;
+        font-size: $font-size-sm;
+        min-height: 44px;
+        width: 100%;
+      }
+    }
+  }
+
+  // Состояние загрузки
+  &.loading {
+    .hero__advantage-card {
+      opacity: 0;
+      visibility: hidden;
+    }
+    
+    .hero__progress-indicators,
+    .hero__navigation,
+    .hero__actions {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+  }
+}
+
+// Анимации
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Адаптивность для очень маленьких экранов
+@include media-breakpoint-down(sm) {
+  .hero {
+    &__main-container {
+      height: 300px;
+    }
+    
+    &__advantage-card {
+      width: 240px;
+      min-height: 80px;
+      padding: 12px;
+      
+      &.next {
+        transform: translate(-5%, -50%) scale(0.75) rotateY(-20deg);
+      }
+      
+      &.prev {
+        transform: translate(-95%, -50%) scale(0.75) rotateY(20deg);
+      }
+      
+      &.far-next,
+      &.far-prev {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+  }
+}
+
+// Accessibility improvements
+@media (prefers-reduced-motion: reduce) {
+  .hero {
+    &__advantage-card {
+      transition: opacity 0.3s ease;
+      transform: translate(-50%, -50%) !important;
+    }
+    
+    &__nav-btn {
+      transition: background-color 0.2s ease;
+    }
+    
+    &__progress-dot {
+      transition: background-color 0.2s ease;
+      
+      &.active::after {
+        animation: none;
+      }
+    }
+  }
+  
+  .hero-equipment-wrapper::before {
+    animation: none;
+  }
+  
+  @keyframes fadeInUp {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+}
+
+// High contrast mode
+@media (prefers-contrast: high) {
+  .glass-card {
+    background: $asphalt-dark;
+    border-width: 2px;
+    border-color: $primary-color;
+  }
+  
+  .hero {
+    &__advantage-card {
+      &.active {
+        border-color: $accent-color;
+        border-width: 3px;
+      }
+    }
+    
+    &__nav-btn {
+      border-width: 3px;
+      background: $asphalt-dark;
+    }
+    
+    &__advantage-text {
+      color: $white-color;
+    }
+  }
+}
+
+// Дополнительные улучшения для мобильных устройств
+@include media-breakpoint-down(xs) {
+  .hero {
+    min-height: 90vh;
+    
+    &__content {
+      gap: 20px;
+    }
+    
+    &__main-container {
+      height: 280px;
+    }
+    
+    &__advantage-card {
+      width: 220px;
+      min-height: 75px;
+      padding: 10px;
+    }
+    
+    &__actions {
+      gap: 12px;
+      
+      .btn {
+        padding: 10px 16px;
+        font-size: 14px;
+        min-height: 40px;
+      }
+    }
+  }
+}

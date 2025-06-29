@@ -1,0 +1,182 @@
+// Contact section
+.contact-section {
+  padding: map.get($spacers, 8) 0;
+  background: rgba($asphalt-dark, 0.9);
+}
+
+.contact-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+  
+  @include media-breakpoint-down(lg) {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+.contact-info {
+  &__title {
+    font-size: $font-size-xxl;
+    color: $white-color;
+    margin-bottom: map.get($spacers, 3);
+    
+    @include media-breakpoint-down(md) {
+      font-size: $font-size-xl;
+    }
+  }
+  
+  &__text {
+    font-size: $font-size-lg;
+    color: rgba($white-color, 0.9);
+    line-height: $line-height-lg;
+    margin-bottom: map.get($spacers, 4);
+    
+    @include media-breakpoint-down(md) {
+      font-size: $font-size-base;
+    }
+  }
+}
+
+.callback-form {
+  display: flex;
+  gap: 15px;
+  margin-bottom: map.get($spacers, 4);
+  background: rgba($asphalt-light, 0.3);
+  padding: 20px;
+  border-radius: $border-radius-lg;
+  border: 1px solid rgba($primary-color, 0.3);
+  
+  @include media-breakpoint-down(sm) {
+    flex-direction: column;
+    padding: 15px;
+  }
+  
+  .form-input {
+    flex: 1;
+    margin-bottom: 0;
+  }
+  
+  .btn {
+    white-space: nowrap;
+  }
+}
+
+// Contact form
+.contact-form {
+  background: rgba($asphalt-medium, 0.8);
+  padding: 40px;
+  border-radius: $border-radius-xl;
+  border: 1px solid rgba($primary-color, 0.2);
+  
+  @include media-breakpoint-down(md) {
+    padding: 30px 20px;
+  }
+  
+  &__title {
+    font-size: $font-size-xl;
+    color: $white-color;
+    margin-bottom: map.get($spacers, 4);
+    text-align: center;
+    
+    @include media-breakpoint-down(md) {
+      font-size: $font-size-lg;
+    }
+  }
+}
+
+// Form elements
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid rgba($primary-color, 0.3);
+  border-radius: $border-radius;
+  font-size: $font-size-base;
+  font-family: $font-family;
+  margin-bottom: map.get($spacers, 3);
+  transition: $transition-base;
+  background: rgba($asphalt-light, 0.8);
+  color: $white-color;
+  position: relative;
+  
+  &::placeholder {
+    color: rgba($white-color, 0.6);
+  }
+  
+  &:focus {
+    outline: none;
+    border-color: $primary-color;
+    box-shadow: 0 0 0 3px rgba($primary-color, 0.2);
+    background: rgba($asphalt-light, 1);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba($primary-color, 0.15);
+  }
+  
+  // Form validation states
+  &.error {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.2);
+  }
+  
+  &:valid {
+    border-color: $success-color;
+  }
+}
+
+.form-textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.form-select {
+  cursor: pointer;
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23FF6B35" stroke-width="2"><polyline points="6,9 12,15 18,9"></polyline></svg>');
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 16px;
+  appearance: none;
+}
+
+.field-error {
+  color: #dc3545;
+  font-size: $font-size-sm;
+  margin-top: 5px;
+  display: block;
+}
+
+// Calculator form specific styles
+.calculator-form {
+  &__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+    
+    @include media-breakpoint-down(sm) {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  &__result {
+    background: rgba($primary-color, 0.1);
+    border: 2px solid $primary-color;
+    border-radius: $border-radius-lg;
+    padding: 20px;
+    margin-top: 20px;
+    text-align: center;
+    
+    &-text {
+      font-size: $font-size-lg;
+      color: $white-color;
+      margin-bottom: 10px;
+      
+      strong {
+        color: $primary-color;
+        font-size: $font-size-xl;
+      }
+    }
+  }
+}

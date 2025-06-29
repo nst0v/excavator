@@ -1,0 +1,144 @@
+// Equipment Icons Section
+.equipment-icons {
+  margin-top: 40px;
+  padding: 30px 0;
+  
+  @include media-breakpoint-down(md) {
+    margin-top: 30px;
+    padding: 20px 0;
+  }
+  
+  @include media-breakpoint-down(sm) {
+    margin-top: 25px;
+    padding: 15px 0;
+  }
+}
+
+.equipment-icons__carousel {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+}
+
+.equipment-icons__track {
+  display: flex;
+  width: fit-content;
+}
+
+.equipment-icons__group {
+  display: flex;
+  gap: 20px;
+  padding-right: 20px;
+  will-change: transform;
+  animation: scrolling 60s linear infinite;
+  
+  @include media-breakpoint-down(md) {
+    animation-duration: 40s;
+    gap: 15px;
+  }
+  
+  @include media-breakpoint-down(sm) {
+    gap: 12px;
+    animation-duration: 35s;
+  }
+}
+
+@keyframes scrolling {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+// Остановка анимации при наведении
+.equipment-icons__carousel:hover .equipment-icons__group {
+  animation-play-state: paused;
+}
+
+// Equipment icon styles
+.equipment-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  min-width: 140px;
+  border: 1px solid #f0f0f0;
+  position: relative;
+  overflow: hidden;
+  
+  @include media-breakpoint-down(md) {
+    min-width: 120px;
+    padding: 15px;
+  }
+  
+  @include media-breakpoint-down(sm) {
+    min-width: 100px;
+    padding: 12px;
+  }
+  
+  // Эффект свечения при наведении
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba($primary-color, 0.2), transparent);
+    transition: left 0.5s ease;
+  }
+  
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    
+    &::before {
+      left: 100%;
+    }
+  }
+}
+
+.equipment-icon__image {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  margin-bottom: 12px;
+  transition: transform 0.3s ease;
+  
+  @include media-breakpoint-down(md) {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 10px;
+  }
+  
+  @include media-breakpoint-down(sm) {
+    width: 45px;
+    height: 45px;
+  }
+}
+
+.equipment-icon__label {
+  font-size: 14px;
+  text-align: center;
+  font-weight: 500;
+  color: #333;
+  line-height: 1.2;
+  
+  @include media-breakpoint-down(md) {
+    font-size: 12px;
+  }
+}
+
+// Hover effect for icon image
+.equipment-icon:hover .equipment-icon__image {
+  transform: scale(1.1);
+}
