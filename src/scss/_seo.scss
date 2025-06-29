@@ -1,0 +1,48 @@
+.seo-text {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.seo-text--collapsible {
+  max-height: 100px;
+  overflow: hidden;
+  position: relative;
+  transition: max-height 0.3s ease;
+  
+  &.expanded {
+    max-height: 1000px;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background: linear-gradient(transparent, white);
+    pointer-events: none;
+  }
+  
+  &.expanded::after {
+    display: none;
+  }
+}
+
+.seo-toggle {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 14px;
+  margin-top: 10px;
+  
+  &:hover {
+    color: #0056b3;
+  }
+}

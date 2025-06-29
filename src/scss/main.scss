@@ -1436,4 +1436,107 @@ button:focus,
   .hero__bg-animation {
     animation: none;
   }
+
+/* Максимально скрытая кнопка SEO */
+.seo-toggle {
+    cursor: default;
+    color: inherit;
+    font-size: inherit;
+    font-family: inherit;
+    font-weight: inherit;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    display: inline;
+    line-height: inherit;
+}
+
+.seo-toggle:hover {
+    color: inherit;
+    cursor: default;
+}
+
+.seo-toggle:focus {
+    outline: none;
+}
+
+.seo-toggle:active {
+    color: inherit;
+}
+
+// SEO Section styles
+.seo-section {
+    background-color: rgba($asphalt-light, 0.3);
+    padding: map.get($spacers, 6) 0;
+    border-top: 1px solid rgba($primary-color, 0.2);
+    
+    &.show {
+        animation: slideDown 0.5s ease-out;
+    }
+}
+
+.seo-content {
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: $line-height-lg;
+    
+    h2 {
+        color: $white-color;
+        margin-bottom: map.get($spacers, 3);
+        font-size: $font-size-xl;
+    }
+    
+    h3 {
+        color: rgba($white-color, 0.9);
+        margin: map.get($spacers, 4) 0 map.get($spacers, 2) 0;
+        font-size: $font-size-lg;
+    }
+    
+    p {
+        margin-bottom: map.get($spacers, 2);
+        color: rgba($white-color, 0.8);
+    }
+    
+    ul {
+        margin: map.get($spacers, 2) 0;
+        padding-left: 20px;
+        
+        li {
+            margin-bottom: 8px;
+            color: rgba($white-color, 0.8);
+        }
+    }
+    
+    strong {
+        color: $primary-color;
+        font-weight: $font-weight-semibold;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// Мобильная адаптация для SEO
+@include media-breakpoint-down(md) {
+    .seo-content {
+        padding: 0 20px;
+        
+        h2 {
+            font-size: $font-size-lg;
+        }
+        
+        h3 {
+            font-size: $font-size-base;
+        }
+    }
+}
 }

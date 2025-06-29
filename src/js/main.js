@@ -431,3 +431,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+// SEO Toggle функциональность
+document.addEventListener('DOMContentLoaded', function() {
+    const seoToggle = document.getElementById('seoToggle');
+    const seoSection = document.getElementById('seoSection');
+    
+    if (seoToggle && seoSection) {
+        seoToggle.addEventListener('click', function() {
+            if (seoSection.style.display === 'none' || seoSection.style.display === '') {
+                seoSection.style.display = 'block';
+                seoSection.classList.add('show');
+                seoToggle.textContent = '×';
+                seoToggle.title = 'Скрыть дополнительную информацию';
+            } else {
+                seoSection.style.display = 'none';
+                seoSection.classList.remove('show');
+                seoToggle.textContent = '.';
+                seoToggle.title = 'Дополнительная информация';
+            }
+        });
+    }
+});
