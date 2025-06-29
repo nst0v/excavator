@@ -70,7 +70,8 @@ class SpezzApp {
     }
 
     initEquipmentIcons() {
-        const equipmentIcons = document.querySelectorAll('.equipment-icon');
+        // Обрабатываем клики только на первой группе иконок (не на дублированной)
+        const equipmentIcons = document.querySelectorAll('.equipment-icons__group:first-child .equipment-icon');
         
         equipmentIcons.forEach(icon => {
             icon.addEventListener('click', () => {

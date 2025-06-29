@@ -115,49 +115,98 @@
             <div class="container">
                 <div class="equipment-icons__carousel">
                     <div class="equipment-icons__track" id="equipmentTrack">
-                        <div class="equipment-icon" data-equipment="excavator">
-                            <img src="images/equipment/excavator.png" alt="Экскаватор" class="equipment-icon__image">
-                            <span class="equipment-icon__label">Экскаваторы</span>
+                        <div class="equipment-icons__group">
+                            <div class="equipment-icon" data-equipment="excavator">
+                                <img src="images/equipment/excavator.png" alt="Экскаватор" class="equipment-icon__image">
+                                <span class="equipment-icon__label">Экскаваторы</span>
+                            </div>
+                            <div class="equipment-icon" data-equipment="truck">
+                                <img src="images/equipment/truck.png" alt="Самосвал" class="equipment-icon__image">
+                                <span class="equipment-icon__label">Самосвалы</span>
+                            </div>
+                            <div class="equipment-icon" data-equipment="crane">
+                                <img src="images/equipment/crane.png" alt="Кран" class="equipment-icon__image">
+                                <span class="equipment-icon__label">Краны</span>
+                            </div>
+                            <div class="equipment-icon" data-equipment="bulldozer">
+                                <img src="images/equipment/bulldozer.png" alt="Бульдозер" class="equipment-icon__image">
+                                <span class="equipment-icon__label">Бульдозеры</span>
+                            </div>
+                            <div class="equipment-icon" data-equipment="loader">
+                                <img src="images/equipment/loader.png" alt="Погрузчик" class="equipment-icon__image">
+                                <span class="equipment-icon__label">Погрузчики</span>
+                            </div>
+                            <div class="equipment-icon" data-equipment="mixer">
+                                <img src="images/equipment/betonmixer.png" alt="Автомиксер" class="equipment-icon__image">
+                                <span class="equipment-icon__label">Автомиксеры</span>
+                            </div>
+                            <div class="equipment-icon" data-equipment="manipulator">
+                                <img src="images/equipment/manipulator.png" alt="Манипулятор" class="equipment-icon__image">
+                                <span class="equipment-icon__label">Манипуляторы</span>
+                            </div>
+                            <div class="equipment-icon" data-equipment="miniloader">
+                                <img src="images/equipment/miniloader.png" alt="Минипогрузчики" class="equipment-icon__image">
+                                <span class="equipment-icon__label">Минипогрузчики</span>
+                            </div>
+                            <div class="equipment-icon" data-equipment="asphalt-roller">
+                                <img src="images/equipment/asphalt-roller.png" alt="Каток" class="equipment-icon__image">
+                                <span class="equipment-icon__label">Катки</span>
+                            </div>
+                            <div class="equipment-icon" data-equipment="tral">
+                                <img src="images/equipment/tral.png" alt="Тралы" class="equipment-icon__image">
+                                <span class="equipment-icon__label">Тралы</span>
+                            </div>
+                            <div class="equipment-icon" data-equipment="yamobur">
+                                <img src="images/equipment/yamobur.png" alt="Ямобур" class="equipment-icon__image">
+                                <span class="equipment-icon__label">Ямобуры</span>
+                            </div>
                         </div>
-                        <div class="equipment-icon" data-equipment="truck">
-                            <img src="images/equipment/truck.png" alt="Самосвал" class="equipment-icon__image">
-                            <span class="equipment-icon__label">Самосвалы</span>
-                        </div>
-                        <div class="equipment-icon" data-equipment="crane">
-                            <img src="images/equipment/crane.png" alt="Кран" class="equipment-icon__image">
-                            <span class="equipment-icon__label">Краны</span>
-                        </div>
-                        <div class="equipment-icon" data-equipment="bulldozer">
-                            <img src="images/equipment/bulldozer.png" alt="Бульдозер" class="equipment-icon__image">
-                            <span class="equipment-icon__label">Бульдозеры</span>
-                        </div>
-                        <div class="equipment-icon" data-equipment="loader">
-                            <img src="images/equipment/loader.png" alt="Погрузчик" class="equipment-icon__image">
-                            <span class="equipment-icon__label">Погрузчики</span>
-                        </div>
-                        <div class="equipment-icon" data-equipment="mixer">
-                            <img src="images/equipment/betonmixer.png" alt="Автомиксер" class="equipment-icon__image">
-                            <span class="equipment-icon__label">Автомиксеры</span>
-                        </div>
-                        <div class="equipment-icon" data-equipment="manipulator">
-                            <img src="images/equipment/manipulator.png" alt="Манипулятор" class="equipment-icon__image">
-                            <span class="equipment-icon__label">Манипуляторы</span>
-                        </div>
-                        <div class="equipment-icon" data-equipment="miniloader">
-                            <img src="images/equipment/miniloader.png" alt="Минипогрузчики" class="equipment-icon__image">
-                            <span class="equipment-icon__label">Минипогрузчики</span>
-                        </div>
-                        <div class="equipment-icon" data-equipment="asphalt-roller">
-                            <img src="images/equipment/asphalt-roller.png" alt="Каток" class="equipment-icon__image">
-                            <span class="equipment-icon__label">Катки</span>
-                        </div>
-                        <div class="equipment-icon" data-equipment="tral">
-                            <img src="images/equipment/tral.png" alt="Тралы" class="equipment-icon__image">
-                            <span class="equipment-icon__label">Тралы</span>
-                        </div>
-                        <div class="equipment-icon" data-equipment="yamobur">
-                            <img src="images/equipment/yamobur.png" alt="Ямобур" class="equipment-icon__image">
-                            <span class="equipment-icon__label">Ямобуры</span>
+                        <!-- Дублированная группа для бесконечной прокрутки -->
+                        <div class="equipment-icons__group" aria-hidden="true">
+                            <div class="equipment-icon" data-equipment="excavator">
+                                <img src="images/equipment/excavator.png" alt="Экскаватор" class="equipment-icon__image">
+                                <span class="equipment-icon__label">Экскаваторы</span>
+                            </div>
+                            <div class="equipment-icon" data-equipment="truck">
+                                <img src="images/equipment/truck.png" alt="Самосвал" class="equipment-icon__image">
+                                <span class="equipment-icon__label">Самосвалы</span>
+                            </div>
+                            <div class="equipment-icon" data-equipment="crane">
+                                <img src="images/equipment/crane.png" alt="Кран" class="equipment-icon__image">
+                                <span class="equipment-icon__label">Краны</span>
+                            </div>
+                            <div class="equipment-icon" data-equipment="bulldozer">
+                                <img src="images/equipment/bulldozer.png" alt="Бульдозер" class="equipment-icon__image">
+                                <span class="equipment-icon__label">Бульдозеры</span>
+                            </div>
+                            <div class="equipment-icon" data-equipment="loader">
+                                <img src="images/equipment/loader.png" alt="Погрузчик" class="equipment-icon__image">
+                                <span class="equipment-icon__label">Погрузчики</span>
+                            </div>
+                            <div class="equipment-icon" data-equipment="mixer">
+                                <img src="images/equipment/betonmixer.png" alt="Автомиксер" class="equipment-icon__image">
+                                <span class="equipment-icon__label">Автомиксеры</span>
+                            </div>
+                            <div class="equipment-icon" data-equipment="manipulator">
+                                <img src="images/equipment/manipulator.png" alt="Манипулятор" class="equipment-icon__image">
+                                <span class="equipment-icon__label">Манипуляторы</span>
+                            </div>
+                            <div class="equipment-icon" data-equipment="miniloader">
+                                <img src="images/equipment/miniloader.png" alt="Минипогрузчики" class="equipment-icon__image">
+                                <span class="equipment-icon__label">Минипогрузчики</span>
+                            </div>
+                            <div class="equipment-icon" data-equipment="asphalt-roller">
+                                <img src="images/equipment/asphalt-roller.png" alt="Каток" class="equipment-icon__image">
+                                <span class="equipment-icon__label">Катки</span>
+                            </div>
+                            <div class="equipment-icon" data-equipment="tral">
+                                <img src="images/equipment/tral.png" alt="Тралы" class="equipment-icon__image">
+                                <span class="equipment-icon__label">Тралы</span>
+                            </div>
+                            <div class="equipment-icon" data-equipment="yamobur">
+                                <img src="images/equipment/yamobur.png" alt="Ямобур" class="equipment-icon__image">
+                                <span class="equipment-icon__label">Ямобуры</span>
+                            </div>
                         </div>
                     </div>
                 </div>
