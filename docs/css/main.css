@@ -1536,7 +1536,7 @@ button:focus,
 .form-input:valid,
 .form-select:valid,
 .form-textarea:valid {
-  border-color: #28A745;
+  border-color: #FF6B35;
 }
 
 .form-textarea {
@@ -2107,10 +2107,10 @@ button:focus,
   animation: slideInRight 0.3s ease-out;
 }
 .notification--success {
-  border-color: #28A745;
+  border-color: #FF6B35;
 }
 .notification--success .notification__icon {
-  color: #28A745;
+  color: #FF6B35;
 }
 .notification--error {
   border-color: #dc3545;
@@ -2351,10 +2351,10 @@ button:focus,
   transform: translateX(0);
 }
 .notification--success {
-  border-color: #28A745;
+  border-color: #FF6B35;
 }
 .notification--success .notification__icon {
-  color: #28A745;
+  color: #FF6B35;
 }
 .notification--error {
   border-color: #dc3545;
@@ -2417,7 +2417,7 @@ button:focus,
 .form-input:valid,
 .form-select:valid,
 .form-textarea:valid {
-  border-color: #28A745;
+  border-color: #FF6B35;
 }
 
 .field-error {

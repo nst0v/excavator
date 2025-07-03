@@ -814,11 +814,14 @@ class SpezzApp {
     }
 
     initEquipmentIcons() {
-        // Обрабатываем клики только на первой группе иконок (не на дублированной)
-        const equipmentIcons = document.querySelectorAll('.equipment-icons__group:first-child .equipment-icon');
+        // ИСПРАВЛЕНИЕ: Обрабатываем клики на ВСЕХ иконках оборудования (включая дублированные)
+        const equipmentIcons = document.querySelectorAll('.equipment-icon');
         
         equipmentIcons.forEach(icon => {
-            icon.addEventListener('click', () => {
+            icon.addEventListener('click', (e) => {
+                // Предотвращаем всплытие события, чтобы не мешать drag/swipe
+                e.stopPropagation();
+                
                 const contactForm = document.getElementById('contactForm');
                 if (contactForm) {
                     contactForm.scrollIntoView({ 
@@ -830,8 +833,22 @@ class SpezzApp {
                 const equipmentType = icon.dataset.equipment;
                 const selectElement = contactForm.querySelector('select[required]');
                 if (selectElement && equipmentType) {
-                    selectElement.value = equipmentType;
-                    selectElement.focus();
+                    // Находим соответствующий option по значению
+                    const option = selectElement.querySelector(`option[value="${equipmentType}"]`);
+                    if (option) {
+                        selectElement.value = equipmentType;
+                    } else {
+                        // Если точного совпадения нет, выбираем "Другое"
+                        const otherOption = selectElement.querySelector('option[value="other"]');
+                        if (otherOption) {
+                            selectElement.value = 'other';
+                        }
+                    }
+                    
+                    // Добавляем небольшую задержку перед фокусом
+                    setTimeout(() => {
+                        selectElement.focus();
+                    }, 500);
                 }
             });
         });
@@ -874,31 +891,45 @@ class SpezzApp {
     }
 
     initModal() {
-        // Создаем модальное окно для калькулятора
+
+        // Создаем модальное окно для калькулятора (повторяет форму обратной связи)
         const modalHTML = `
             <div class="modal" id="calculatorModal">
                 <div class="modal__content">
                     <div class="modal__header">
-                        <h3 class="modal__title">Расчет стоимости</h3>
+
+                        <h3 class="modal__title">Рассчитать стоимость</h3>
                         <button class="modal__close" type="button">&times;</button>
                     </div>
                     <div class="modal__body">
+                        <p class="modal__text">
+                            Оставьте свой телефон и мы рассчитаем стоимость для вашего проекта.
+                        </p>
                         <form class="calculator-form" id="calculatorForm">
-                            <div class="calculator-form__row">
-                                <select class="form-select" required>
-                                    <option value="">Тип техники</option>
-                                    <option value="excavator">Экскаватор</option>
-                                    <option value="truck">Самосвал</option>
-                                    <option value="crane">Кран</option>
-                                    <option value="bulldozer">Бульдозер</option>
-                                    <option value="loader">Погрузчик</option>
-                                </select>
-                                <input type="number" placeholder="Часов работы" class="form-input" min="1" required>
-                            </div>
-                            <input type="text" placeholder="Место работ" class="form-input" required>
-                            <textarea placeholder="Описание работ" class="form-textarea" rows="3"></textarea>
-                            <input type="tel" placeholder="Ваш телефон для расчета" class="form-input" required>
-                            <button type="submit" class="btn btn--primary btn--full">Получить расчет</button>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                            <input type="tel" placeholder="Ваш телефон" class="form-input" required>
+                            <button type="submit" class="btn btn--primary btn--full">Рассчитать стоимость</button>
                         </form>
                     </div>
                 </div>
@@ -943,10 +974,13 @@ class SpezzApp {
         // Пауза автопроигрывания при открытии модального окна
         this.pauseAutoplay();
         
-        // Фокус на первое поле
+
+        // Фокус на поле телефона
         setTimeout(() => {
-            const firstInput = modal.querySelector('.form-select');
-            if (firstInput) firstInput.focus();
+
+
+            const phoneInput = modal.querySelector('input[type="tel"]');
+            if (phoneInput) phoneInput.focus();
         }, 300);
     }
 
@@ -995,26 +1029,29 @@ class SpezzApp {
     }
 
     handleCalculatorForm(form) {
-        const formData = new FormData(form);
-        const data = {
-            equipment: form.querySelector('select').value,
-            hours: form.querySelector('input[type="number"]').value,
-            location: form.querySelector('input[type="text"]').value,
-            description: form.querySelector('textarea').value,
-            phone: form.querySelector('input[type="tel"]').value
-        };
+
+
+
+
+
+
+
+
+        const phone = form.querySelector('input[type="tel"]').value;
         
         // Скрываем модальное окно
         this.hideModal('calculatorModal');
         
         // Показываем уведомление
-        this.showNotification('Спасибо за заявку! Мы рассчитаем стоимость и перезвоним в течение 30 минут.', 'success');
+
+        this.showNotification('Спасибо! Мы рассчитаем стоимость и перезвоним в течение 30 минут.', 'success');
         
         // Очищаем форму
         form.reset();
         
         // Здесь можно добавить отправку данных на сервер
-        console.log('Calculator request:', data);
+
+        console.log('Calculator request:', { phone });
     }
 
     showNotification(message, type = 'info') {
