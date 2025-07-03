@@ -415,36 +415,6 @@
         </div>
     </section>
     <script src="https://api-maps.yandex.ru/2.1/?apikey=YOUR_API_KEY&lang=ru_RU" type="text/javascript"></script>
-    <script>
-        ymaps.ready(function () {
-            var myMap = new ymaps.Map('yandex-map', {
-                center: [44.9572, 34.1108],
-                zoom: 8,
-                controls: ['zoomControl', 'fullscreenControl']
-            });
-            
-            var cities = [
-                {name: 'Симферополь', coords: [44.9572, 34.1108]},
-                {name: 'Севастополь', coords: [44.6054, 33.5221]},
-                {name: 'Ялта', coords: [44.4952, 34.1664]},
-                {name: 'Евпатория', coords: [45.1983, 33.3669]},
-                {name: 'Керчь', coords: [45.3606, 36.4706]},
-                {name: 'Феодосия', coords: [45.0308, 35.3828]},
-                {name: 'Джанкой', coords: [45.7117, 34.3911]}
-
-            ];
-            
-            cities.forEach(function(city) {
-                var placemark = new ymaps.Placemark(city.coords, {
-                    balloonContent: city.name + '<br>Работаем в этом регионе'
-                }, {
-                    preset: 'islands#dotIcon'
-                });
-                myMap.geoObjects.add(placemark);
-            });
-        });
-    </script>
-    
     <script src="js/main.js"></script>
 </body>
 </html>

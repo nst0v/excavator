@@ -1262,4 +1262,183 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Инициализация карты с кастомными иконками
+    if (typeof ymaps !== 'undefined') {
+        ymaps.ready(function () {
+            var myMap = new ymaps.Map('yandex-map', {
+                center: [44.9572, 34.1108],
+                zoom: 8,
+                controls: ['zoomControl', 'fullscreenControl']
+            });
+            
+            // Массив с данными о технике в разных городах
+            var equipmentLocations = [
+                // Симферополь
+                {name: 'Симферополь', coords: [44.9572, 34.1108], equipment: 'excavator', count: '15+ экскаваторов'},
+                {name: 'Симферополь', coords: [44.9672, 34.1208], equipment: 'truck', count: '25+ самосвалов'},
+                {name: 'Симферополь', coords: [44.9472, 34.1008], equipment: 'crane', count: '8+ кранов'},
+                
+                // Севастополь
+                {name: 'Севастополь', coords: [44.6054, 33.5221], equipment: 'bulldozer', count: '12+ бульдозеров'},
+                {name: 'Севастополь', coords: [44.6154, 33.5321], equipment: 'loader', count: '20+ погрузчиков'},
+                {name: 'Севастополь', coords: [44.5954, 33.5121], equipment: 'mixer', count: '10+ автомиксеров'},
+                
+                // Ялта
+                {name: 'Ялта', coords: [44.4952, 34.1664], equipment: 'manipulator', count: '6+ манипуляторов'},
+                {name: 'Ялта', coords: [44.5052, 34.1764], equipment: 'miniloader', count: '8+ минипогрузчиков'},
+                
+                // Евпатория
+                {name: 'Евпатория', coords: [45.1983, 33.3669], equipment: 'asphalt-roller', count: '5+ катков'},
+                {name: 'Евпатория', coords: [45.2083, 33.3769], equipment: 'excavator', count: '10+ экскаваторов'},
+                {name: 'Евпатория', coords: [45.1883, 33.3569], equipment: 'truck', count: '18+ самосвалов'},
+                
+                // Керчь
+                {name: 'Керчь', coords: [45.3606, 36.4706], equipment: 'tral', count: '4+ трала'},
+                {name: 'Керчь', coords: [45.3706, 36.4806], equipment: 'yamobur', count: '3+ ямобура'},
+                {name: 'Керчь', coords: [45.3506, 36.4606], equipment: 'crane', count: '7+ кранов'},
+                
+                // Феодосия
+                {name: 'Феодосия', coords: [45.0308, 35.3828], equipment: 'loader', count: '15+ погрузчиков'},
+                {name: 'Феодосия', coords: [45.0408, 35.3928], equipment: 'bulldozer', count: '8+ бульдозеров'},
+                
+                // Джанкой
+                {name: 'Джанкой', coords: [45.7117, 34.3911], equipment: 'mixer', count: '6+ автомиксеров'},
+                {name: 'Джанкой', coords: [45.7217, 34.4011], equipment: 'excavator', count: '12+ экскаваторов'},
+                
+                // Алушта
+                {name: 'Алушта', coords: [44.6748, 34.4108], equipment: 'manipulator', count: '4+ манипулятора'},
+                {name: 'Алушта', coords: [44.6848, 34.4208], equipment: 'truck', count: '8+ самосвалов'},
+                
+                // Бахчисарай
+                {name: 'Бахчисарай', coords: [44.7539, 33.8578], equipment: 'miniloader', count: '6+ минипогрузчиков'},
+                {name: 'Бахчисарай', coords: [44.7639, 33.8678], equipment: 'asphalt-roller', count: '3+ катка'},
+                
+                // Красноперекопск
+                {name: 'Красноперекопск', coords: [45.9597, 33.7947], equipment: 'yamobur', count: '2+ ямобура'},
+                {name: 'Красноперекопск', coords: [45.9697, 33.8047], equipment: 'tral', count: '3+ трала'},
+                
+                // Армянск
+                {name: 'Армянск', coords: [46.1058, 33.6892], equipment: 'excavator', count: '8+ экскаваторов'},
+                {name: 'Армянск', coords: [46.1158, 33.6992], equipment: 'loader', count: '10+ погрузчиков'},
+                
+                // Саки
+                {name: 'Саки', coords: [45.1322, 33.6011], equipment: 'crane', count: '5+ кранов'},
+                {name: 'Саки', coords: [45.1422, 33.6111], equipment: 'bulldozer', count: '4+ бульдозера'},
+                
+                // Белогорск
+                {name: 'Белогорск', coords: [45.0561, 34.6014], equipment: 'truck', count: '12+ самосвалов'},
+                {name: 'Белогорск', coords: [45.0661, 34.6114], equipment: 'mixer', count: '5+ автомиксеров'}
+            ];
+            
+            // Создаем кастомные иконки для каждого типа техники
+            equipmentLocations.forEach(function(location) {
+                // Создаем кастомную иконку
+                var customIcon = ymaps.templateLayoutFactory.createClass(
+                    '<div class="custom-map-icon" style="' +
+                    'width: 40px; height: 40px; ' +
+                    'background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); ' +
+                    'border-radius: 50%; ' +
+                    'display: flex; align-items: center; justify-content: center; ' +
+                    'box-shadow: 0 4px 12px rgba(0,0,0,0.3); ' +
+                    'border: 2px solid white; ' +
+                    'position: relative; ' +
+                    'cursor: pointer; ' +
+                    'transition: transform 0.2s ease;' +
+                    '">' +
+                    '<img src="images/equipment/' + getEquipmentImage(location.equipment) + '" ' +
+                    'style="width: 24px; height: 24px; filter: brightness(0) invert(1);" ' +
+                    'alt="' + location.equipment + '">' +
+                    '</div>',
+                    {
+                        build: function () {
+                            customIcon.superclass.build.call(this);
+                            var element = this.getParentElement().getElementsByClassName('custom-map-icon')[0];
+                            
+                            // Добавляем эффекты при наведении
+                            element.addEventListener('mouseenter', function() {
+                                element.style.transform = 'scale(1.1)';
+                                element.style.zIndex = '1000';
+                            });
+                            
+                            element.addEventListener('mouseleave', function() {
+                                element.style.transform = 'scale(1)';
+                                element.style.zIndex = 'auto';
+                            });
+                        }
+                    }
+                );
+                
+                var placemark = new ymaps.Placemark(location.coords, {
+                    balloonContent: 
+                        '<div style="padding: 10px; font-family: Inter, sans-serif;">' +
+                        '<h4 style="margin: 0 0 8px 0; color: #333; font-size: 16px;">' + location.name + '</h4>' +
+                        '<p style="margin: 0 0 8px 0; color: #666; font-size: 14px;">' + location.count + '</p>' +
+                        '<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">' +
+                        '<img src="images/equipment/' + getEquipmentImage(location.equipment) + '" ' +
+                        'style="width: 20px; height: 20px;" alt="' + location.equipment + '">' +
+                        '<span style="color: #333; font-size: 14px;">' + getEquipmentName(location.equipment) + '</span>' +
+                        '</div>' +
+                        '<a href="tel:+79783210011" style="' +
+                        'display: inline-block; padding: 8px 16px; ' +
+                        'background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); ' +
+                        'color: white; text-decoration: none; border-radius: 6px; ' +
+                        'font-size: 14px; font-weight: 500; ' +
+                        'transition: opacity 0.2s ease;' +
+                        '" onmouseover="this.style.opacity=0.9" onmouseout="this.style.opacity=1">' +
+                        'Заказать технику' +
+                        '</a>' +
+                        '</div>',
+                    hintContent: location.name + ' - ' + location.count
+                }, {
+                    iconLayout: customIcon,
+                    iconShape: {
+                        type: 'Circle',
+                        coordinates: [0, 0],
+                        radius: 20
+                    }
+                });
+                
+                myMap.geoObjects.add(placemark);
+            });
+            
+            // Функция для получения имени файла изображения
+            function getEquipmentImage(equipment) {
+                const imageMap = {
+                    'excavator': 'excavator.png',
+                    'truck': 'truck.png',
+                    'crane': 'crane.png',
+                    'bulldozer': 'bulldozer.png',
+                    'loader': 'loader.png',
+                    'mixer': 'betonmixer.png',
+                    'manipulator': 'manipulator.png',
+                    'miniloader': 'miniloader.png',
+                    'asphalt-roller': 'asphalt-roller.png',
+                    'tral': 'tral.png',
+                    'yamobur': 'yamobur.png'
+                };
+                return imageMap[equipment] || 'excavator.png';
+            }
+            
+            // Функция для получения названия техники
+            function getEquipmentName(equipment) {
+                const nameMap = {
+                    'excavator': 'Экскаваторы',
+                    'truck': 'Самосвалы',
+                    'crane': 'Краны',
+                    'bulldozer': 'Бульдозеры',
+                    'loader': 'Погрузчики',
+                    'mixer': 'Автомиксеры',
+                    'manipulator': 'Манипуляторы',
+                    'miniloader': 'Минипогрузчики',
+                    'asphalt-roller': 'Катки',
+                    'tral': 'Тралы',
+                    'yamobur': 'Ямобуры'
+                };
+                return nameMap[equipment] || 'Спецтехника';
+            }
+        });
+    }
+});
 //# sourceMappingURL=main.js.map
