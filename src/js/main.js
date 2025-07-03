@@ -662,7 +662,7 @@ class SpezzApp {
         const phone = formData.get('phone') || form.querySelector('input[type="tel"]').value;
         
         // Показываем уведомление
-        this.showNotification('Спасибо! Мы перезвоним вам в течение 15 минут.', 'success');
+        this.showNotification('Спасибо! Мы вам перезвоним.', 'success');
         
         // Очищаем форму
         form.reset();

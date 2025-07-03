@@ -297,7 +297,7 @@ class FormValidator {
             
             // Show success message
             if (typeof showNotification === 'function') {
-                showNotification('Заявка отправлена! Свяжемся с вами в течение 15 минут.', 'success');
+                showNotification('Заявка отправлена! Мы свяжемся с вами.', 'success');
             }
             
             // Track form submission
@@ -996,7 +996,7 @@ class SpezzApp {
         const phone = formData.get('phone') || form.querySelector('input[type="tel"]').value;
         
         // Показываем уведомление
-        this.showNotification('Спасибо! Мы перезвоним вам в течение 15 минут.', 'success');
+        this.showNotification('Спасибо! Мы вам перезвоним.', 'success');
         
         // Очищаем форму
         form.reset();

@@ -297,7 +297,7 @@ class FormValidator {
             
             // Show success message
             if (typeof showNotification === 'function') {
-                showNotification('Заявка отправлена! Свяжемся с вами в течение 15 минут.', 'success');
+                showNotification('Заявка отправлена! Мы свяжемся с вами.', 'success');
             }
             
             // Track form submission

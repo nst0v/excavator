@@ -79,29 +79,72 @@
   }
   
   &__title {
-    font-size: $font-size-hero;
+    // Используем новый миксин для адаптивного заголовка
+    @include responsive-hero-title;
     font-weight: $font-weight-bold;
-    line-height: 1.1;
     text-align: center;
     margin-bottom: 0;
     
+    // Дополнительные медиа-запросы для других разрешений
     @include media-breakpoint-down(lg) {
-      font-size: 40px;
+      font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+      line-height: 1.2;
     }
     
     @include media-breakpoint-down(md) {
-      font-size: 32px;
+      font-size: clamp(1.8rem, 6vw, 2.5rem);
+      line-height: 1.25;
     }
     
     @include media-breakpoint-down(sm) {
-      font-size: 28px;
-      line-height: 1.2;
+      font-size: clamp(1.5rem, 7vw, 2rem);
+      line-height: 1.3;
+    }
+    
+    // Специальная обработка для проблемного разрешения 1121x687
+    @include media-resolution(1121px, 1121px, 687px, 687px) {
+      font-size: 2.8rem !important;
+      line-height: 1.25 !important;
+      margin-bottom: 1.5rem !important;
+      @include ensure-text-visibility;
+    }
+    
+    // Расширенный диапазон для похожих разрешений
+    @include media-resolution(1100px, 1150px, 650px, 720px) {
+      font-size: 2.8rem;
+      line-height: 1.25;
+      margin-bottom: 1.5rem;
+      white-space: nowrap;
+      
+      // Если текст не помещается, разрешаем перенос
+      @supports (white-space: balance) {
+        white-space: balance;
+      }
     }
   }
   
   &__title-accent {
     color: $primary-color;
     display: block;
+    @include ensure-text-visibility;
+    
+    @include media-breakpoint-down(md) {
+      display: inline;
+    }
+    
+    // Обеспечиваем видимость акцентного текста на проблемном разрешении
+    @include media-resolution(1100px, 1150px, 650px, 720px) {
+      display: block !important;
+      margin-top: 0.2rem;
+      color: $primary-color !important;
+    }
+    
+    @include media-resolution(1121px, 1121px, 687px, 687px) {
+      display: block !important;
+      margin-top: 0.2rem !important;
+      color: $primary-color !important;
+      @include ensure-text-visibility;
+    }
   }
   
   // Основной контейнер слайдера
@@ -707,5 +750,60 @@
         min-height: 40px;
       }
     }
+  }
+}
+
+// Дополнительные исправления для видимости текста
+.hero {
+  // Обеспечиваем, что контейнер не обрезает контент
+  &__content {
+    overflow: visible !important;
+    position: relative;
+    z-index: 5;
+    
+    @include media-resolution(1100px, 1150px, 650px, 720px) {
+      min-height: auto;
+      height: auto;
+    }
+  }
+  
+  // Принудительная видимость для критических разрешений
+  @include media-resolution(1121px, 1121px, 687px, 687px) {
+    &__title,
+    &__title-accent {
+      visibility: visible !important;
+      opacity: 1 !important;
+      display: block !important;
+      overflow: visible !important;
+      max-width: none !important;
+      width: auto !important;
+      height: auto !important;
+      min-height: auto !important;
+    }
+  }
+}
+
+// Утилитарные классы для экстренного исправления
+.text-force-visible {
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: block !important;
+  overflow: visible !important;
+  position: relative !important;
+  z-index: 999 !important;
+}
+
+// Исправление для браузеров с проблемами рендеринга
+@supports (-webkit-appearance: none) {
+  .hero__title {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+// Исправление для высоких DPI экранов
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .hero__title {
+    text-rendering: optimizeLegibility;
   }
 }
