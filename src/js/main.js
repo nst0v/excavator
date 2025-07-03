@@ -557,44 +557,45 @@ class SpezzApp {
     }
 
     initModal() {
-
-        // Создаем модальное окно для калькулятора (повторяет форму обратной связи)
+        // Создаем модальное окно для калькулятора (повторяет полную форму обратной связи)
         const modalHTML = `
             <div class="modal" id="calculatorModal">
                 <div class="modal__content">
                     <div class="modal__header">
-
                         <h3 class="modal__title">Рассчитать стоимость</h3>
                         <button class="modal__close" type="button">&times;</button>
                     </div>
                     <div class="modal__body">
                         <p class="modal__text">
-                            Оставьте свой телефон и мы рассчитаем стоимость для вашего проекта.
+                            Заполните форму и мы рассчитаем стоимость для вашего проекта.
                         </p>
                         <form class="calculator-form" id="calculatorForm">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                            <input type="tel" placeholder="Ваш телефон" class="form-input" required>
+                            <input type="text" placeholder="Ваше имя" class="form-input" required>
+                            <input type="tel" placeholder="Телефон" class="form-input" required>
+                            <input type="text" placeholder="Место проведения работ" class="form-input" required>
+                            <select class="form-select" required>
+                                <option value="">Тип техники</option>
+                                <option value="excavator">Экскаватор</option>
+                                <option value="truck">Самосвал</option>
+                                <option value="crane">Кран</option>
+                                <option value="bulldozer">Бульдозер</option>
+                                <option value="loader">Погрузчик</option>
+                                <option value="mixer">Автомиксер</option>
+                                <option value="manipulator">Манипулятор</option>
+                                <option value="miniloader">Минипогрузчик</option>
+                                <option value="asphalt-roller">Каток</option>
+                                <option value="tral">Трал</option>
+                                <option value="yamobur">Ямобур</option>
+                                <option value="other">Другое</option>
+                            </select>
+                            <select class="form-select" required>
+                                <option value="">Желаемая дата</option>
+                                <option value="today">Сегодня</option>
+                                <option value="tomorrow">Завтра</option>
+                                <option value="this-week">На этой неделе</option>
+                                <option value="next-week">На следующей неделе</option>
+                            </select>
+                            <textarea placeholder="Объём работ" class="form-textarea" required></textarea>
                             <button type="submit" class="btn btn--primary btn--full">Рассчитать стоимость</button>
                         </form>
                     </div>
@@ -640,13 +641,10 @@ class SpezzApp {
         // Пауза автопроигрывания при открытии модального окна
         this.pauseAutoplay();
         
-
-        // Фокус на поле телефона
+        // Фокус на поле имени
         setTimeout(() => {
-
-
-            const phoneInput = modal.querySelector('input[type="tel"]');
-            if (phoneInput) phoneInput.focus();
+            const nameInput = modal.querySelector('input[type="text"]');
+            if (nameInput) nameInput.focus();
         }, 300);
     }
 
@@ -695,29 +693,27 @@ class SpezzApp {
     }
 
     handleCalculatorForm(form) {
-
-
-
-
-
-
-
-
-        const phone = form.querySelector('input[type="tel"]').value;
+        const formData = new FormData(form);
+        const data = {
+            name: formData.get('name') || form.querySelector('input[type="text"]').value,
+            phone: formData.get('phone') || form.querySelector('input[type="tel"]').value,
+            location: formData.get('location') || form.querySelectorAll('input[type="text"]')[1].value,
+            equipment: form.querySelectorAll('select')[0].value,
+            date: form.querySelectorAll('select')[1].value,
+            volume: formData.get('volume') || form.querySelector('textarea').value
+        };
         
         // Скрываем модальное окно
         this.hideModal('calculatorModal');
         
         // Показываем уведомление
-
         this.showNotification('Спасибо! Мы рассчитаем стоимость и перезвоним в течение 30 минут.', 'success');
         
         // Очищаем форму
         form.reset();
         
         // Здесь можно добавить отправку данных на сервер
-
-        console.log('Calculator request:', { phone });
+        console.log('Calculator request:', data);
     }
 
     showNotification(message, type = 'info') {
